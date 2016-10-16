@@ -2,7 +2,7 @@
 
 ![screenshot](https://raw.githubusercontent.com/gporrata/bklyn-zsh/master/screenshot.png)
 
-My own zsh theme inspired from other zsh themes. Features:
+My Powerline9k zsh theme inspired from other zsh themes. Features:
 
 * better icons suited for nerd fonts
 * rotating os icon color
