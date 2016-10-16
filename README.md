@@ -22,7 +22,7 @@ Rotation based on the number of zsh sessions running.
 
 ## Installation
 
-You need zsh, [zplug](https://github.com/zplug/zplug), [powerlevel9k](https://github.com/bhilburn/powerlevel9k), and a [nerd font](https://github.com/ryanoasis/nerd-fonts). The screenshot above is using __nerd monofur font__ and __iterm2__. You could use some other zsh plugin but imho __zplug__ is the best. Also note you must install the theme before __powerlevel9k__. For instance, I use __nice:10__ when adding __powerlevel9k__ like so:
+You need zsh, [zplug](https://github.com/zplug/zplug), [powerlevel9k](https://github.com/bhilburn/powerlevel9k), and a [nerd font](https://github.com/ryanoasis/nerd-fonts). The screenshot above is using __nerd monofur font__ and __iterm2__. You could use some other zsh plugin manager but imho __zplug__ is the best. Also note you must install the theme before __powerlevel9k__. For instance, I use __nice:10__ when adding __powerlevel9k__ like so:
 
 ```bash
 # bklyn-zsh
