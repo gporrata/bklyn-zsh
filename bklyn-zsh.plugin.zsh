@@ -5,12 +5,8 @@ POWERLEVEL9K_MODE='awesome-fontconfig'
 ## COLORS + CONFIG
 ########################
 
-# terminal id
-
-(( term_idx = $(ps a | grep -c zsh) - 1 ))
-
 # random os icon color
-case $(( $term_idx % 5 )) in
+case $(( $[${RANDOM}%5] )) in
   0)
     POWERLEVEL9K_OS_ICON_COLOR=166 # orange
     ;;
@@ -142,7 +138,7 @@ segments_digital2() {
 }
 
 
-case $(( $term_idx % 5 )) in
+case $(( $[${RANDOM}%5] )) in
   1)
     segments_rounded
     ;;

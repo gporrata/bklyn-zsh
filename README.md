@@ -5,8 +5,8 @@
 My Powerline9k zsh theme inspired from other zsh themes. Features:
 
 * better icons suited for nerd fonts
-* rotating os icon color
-* rotating theme for segment dividers:
+* random os icon color
+* random theme for segment dividers:
   * regular triangular segments
   * rounded segments
   * in flame segments
@@ -18,11 +18,9 @@ __Left segment__: os_icon root_indicator context dir vcs
 
 __Right segment__: status load ram background_jobs time
 
-Rotation based on the number of zsh sessions running.
-
 ## Installation
 
-You need zsh, [zplug](https://github.com/zplug/zplug), [powerlevel9k](https://github.com/bhilburn/powerlevel9k), and a [nerd font](https://github.com/ryanoasis/nerd-fonts). The screenshot above is using __nerd monofur font__ and __iterm2__. You could use some other zsh plugin but imho __zplug__ is the best. Also note you must install the theme before __powerlevel9k__. For instance, I use __nice:10__ when adding __powerlevel9k__ like so:
+You need zsh, [zplug](https://github.com/zplug/zplug), [powerlevel9k](https://github.com/bhilburn/powerlevel9k), and a [nerd font](https://github.com/ryanoasis/nerd-fonts). The screenshot above is using __nerd monofur font__ and __iterm2__. You could use some other zsh plugin manager but imho __zplug__ is the best. Also note you must install the theme before __powerlevel9k__. For instance, I use __nice:10__ when adding __powerlevel9k__ like so:
 
 ```bash
 # bklyn-zsh
@@ -31,7 +29,6 @@ zplug "gporrata/bklyn-zsh"
 # powerlevel 9k
 zplug "bhilburn/powerlevel9k", nice:10
 ```
-
 
 ## TODO
 
