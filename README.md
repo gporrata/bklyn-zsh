@@ -5,8 +5,8 @@
 My Powerline9k zsh theme inspired from other zsh themes. Features:
 
 * better icons suited for nerd fonts
-* rotating os icon color
-* rotating theme for segment dividers:
+* random os icon color
+* random theme for segment dividers:
   * regular triangular segments
   * rounded segments
   * in flame segments
@@ -17,8 +17,6 @@ My Powerline9k zsh theme inspired from other zsh themes. Features:
 __Left segment__: os_icon root_indicator context dir vcs
 
 __Right segment__: status load ram background_jobs time
-
-Rotation based on the number of zsh sessions running.
 
 ## Installation
 
@@ -31,7 +29,6 @@ zplug "gporrata/bklyn-zsh"
 # powerlevel 9k
 zplug "bhilburn/powerlevel9k", nice:10
 ```
-
 
 ## TODO
 
