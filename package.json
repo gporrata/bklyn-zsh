@@ -17,6 +17,7 @@
     "webpack-node-externals": "^1.5.4"
   },
   "scripts": {
-    "start": "webpack --config src/webpack.config.babel.js --watch"
+    "start": "webpack --config src/webpack.config.babel.js --watch --progress",
+    "webpack": "webpack --help"
   }
 }

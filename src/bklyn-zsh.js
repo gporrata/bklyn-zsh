@@ -1,53 +1,25 @@
 import _ from 'lodash'
-import os from 'os'
+import osIcon from './osIcon'
+import dirIcon from './dirIcon'
+import icons from './icons'
 
-const cols = parseInt(process.argv[3])
+const debug = process.env.bklyn_zsh_debug == 'DEBUG' ? console.error : _.noop
 
-const icons = {
-  'darwin': 'osx',
-  'freebsd': 'freebsd',
-  'linux': 'linux',
-  'win32': 'win32',
-}
+//debug('BKLYN_ZSH_DIRTYPE='+process.env.BKLYN_ZSH_DIRTYPE)
 
-const osPrompt = () => {
-  let show = ''
-  switch(os.platform()) {
-    case 'darwin':
-      show = icons.darwin
-      break
-    case 'freebsd':
-      show = icons.freebsd
-      break
-    case 'linux':
-      show = icons.linux
-      break
-    case 'win32':
-      show = icons.win32
-      break
-    default:
-      show =''
-  }
-  return show
-}
+const cols = parseInt(process.env.BKLYN_ZSH_COLS)
 
-const combine = (items) => {
-  let result = ''
-  items.forEach(item => {
-    switch(typeof item) {
-      case 'function':
-        result += item()
-        break
-      case 'string':
-        result += item()
-        break
-    }
-  })
-  return result
+const combine = (...items) => {
+  return _(items)
+    .map(item => (typeof item == 'function') ? item() : item)
+    .reduce((acc, item) => `${acc} ${item}`)
 }
 
 const left = () => {
-  return combine([osPrompt])
+  return combine(
+    osIcon, `${process.env.USER}@${process.env.HOST}`,
+    dirIcon, process.env.PWD
+  ) + `\n${icons.prompt} `
 }
 
 const right = () => {
