@@ -4,6 +4,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
+    "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.10",
     "babel-plugin-dynamic-import-webpack": "^1.0.1",
     "babel-plugin-transform-object-rest-spread": "^6.20.2",
@@ -18,6 +19,7 @@
   },
   "scripts": {
     "start": "webpack --config src/webpack.config.babel.js --watch --progress",
-    "webpack": "webpack --help"
+    "webpack": "webpack --help",
+    "postinstall": "flow-typed install"
   }
 }
