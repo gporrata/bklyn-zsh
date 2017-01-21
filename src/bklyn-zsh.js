@@ -1,13 +1,20 @@
+// @flow
+
 import _ from 'lodash'
 import osIcon from './osIcon'
 import dirIcon from './dirIcon'
 import icons from './icons'
+import gitStatusOf from './gitStatusOf'
 
 const debug = process.env.bklyn_zsh_debug == 'DEBUG' ? console.error : _.noop
 
 //debug('BKLYN_ZSH_DIRTYPE='+process.env.BKLYN_ZSH_DIRTYPE)
 
 const cols = parseInt(process.env.BKLYN_ZSH_COLS)
+const gitStatus = _.defaultTo(process.env.BKLYN_ZSH_GIT, '')
+const user = _.defaultTo(process.env.USER, '')
+const host = _.defaultTo(process.env.HOST, '')
+const pwd = _.defaultTo(process.env.PWD, '')
 
 const combine = (...items) => {
   return _(items)
@@ -17,8 +24,8 @@ const combine = (...items) => {
 
 const left = () => {
   return combine(
-    osIcon, `${process.env.USER}@${process.env.HOST}`,
-    dirIcon, process.env.PWD
+    osIcon, `${user}@${host}`,
+    dirIcon, pwd, gitStatusOf(gitStatus)
   ) + `\n${icons.prompt} `
 }
 

@@ -1,3 +1,5 @@
+// @flow
+
 import os from 'os'
 import icons from './icons'
 
