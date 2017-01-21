@@ -1,5 +1,31 @@
 // @flow
 
+import 'babel-core/register'
+import 'babel-polyfill'
+
+//
+
+import _ from 'lodash'
+import koa from 'koa'
+import route from 'koa-route'
+
+const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
+
+koa()
+  .use(route.get('/zsh-left', function *(next){
+    this.body = 'TODO: zsh-left'
+  }))
+  .use(route.get('/zsh-right', function *(next) {
+    this.body = 'TODO: zsh-right'
+  }))
+  .use(route.get('/tmux', function *(next) {
+    this.body = 'TODO: tmux'
+  }))
+  .listen(serverPort, 'localhost')
+
+console.log('running bklyn-zsh...')
+
+/*
 import _ from 'lodash'
 import osIcon from './osIcon'
 import dirIcon from './dirIcon'
@@ -42,3 +68,5 @@ case 'zsh-right':
   console.log(right())
   break
 }
+
+*/
