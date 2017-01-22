@@ -3,6 +3,7 @@
 import _ from 'lodash'
 
 import icons from './icons'
+import scheme from './scheme'
 
 /* example of: git -c color.status=false status --porcelain=2 --branch
 
@@ -54,10 +55,10 @@ export default (gitStatus /*: string */, gitStash /*: string */) => {
   return _([
     icons.vcs.branch, ' ',
     staging && `${icons.vcs[staging]} `,
-    branch,
-    parseInt(up) && `${icons.vcs.up} ${up}`,
-    parseInt(down) && `${icons.vcs.down} ${down}`,
-    stashes && `${icons.vcs.stashes} ${stashes}`
+    scheme.vcs.fg1, branch, scheme.vcs.fg0,
+    parseInt(up) && `${icons.vcs.up} ${scheme.vcs.fg1}${up}${scheme.vcs.fg0}`,
+    parseInt(down) && `${icons.vcs.down} ${scheme.vcs.fg1}${down}${scheme.vcs.fg0}`,
+    stashes && `${icons.vcs.stashes} ${scheme.vcs.fg1}${stashes}${scheme.vcs.fg0}`
   ]).filter().reduce((e, acc) => `${e}${acc}`)
   //return `${icons.vcs.branch} ${branch} +${up} -${down} stg ${staging} sta ${stashes}`
 }

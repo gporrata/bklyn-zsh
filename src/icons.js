@@ -1,5 +1,7 @@
 // @flow
 
+import scheme from './scheme'
+
 export default {
   // os
   os: {
@@ -40,8 +42,8 @@ export default {
     branch: '\uf126',
     up: '\uf0aa',
     down: '\uf0ab',
-    staged: '\uf069',
-    unstaged: '\uf06a',
+    staged: `${scheme.vcs.fgStaged}\uf069${scheme.vcs.fg0}`,
+    unstaged: `${scheme.vcs.fgUnstaged}\uf06a${scheme.vcs.fg0}`,
     stashes: '\uf0cf'
   },
 
@@ -61,12 +63,12 @@ export default {
   ssh: '\uf1be', // cloud, better might be '\uf289', or '\ue7ae'
 
   // separators, all from powerline
-  styles: {
+  seps: {
     angles: ['\ue0b0', '\ue0b1', '\ue0b2', '\ue0b3'],
     curves: ['\ue0b4', '\ue0b5', '\ue0b6', '\ue0b7'],
     flames: ['\ue0c0', '\ue0c1', '\ue0c2', '\ue0c3'],
     digital: ['\ue0c4', '\ue0c5', '\ue0c6', '\ue0c7'],
-    // sorry, not a fan of the other styles
+    // sorry, not a fan of the other seps
   },
 
   // misc

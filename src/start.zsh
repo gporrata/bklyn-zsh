@@ -41,14 +41,14 @@ case "$1" in
     bklyn_zsh_data
     echo "5 and 1 timed runs of zsh-left"
     for i in {1..5}; do
-      echo -n $i\:; bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo
+      bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo "   $i"
     done
-    time (echo -n 6\: ; bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo)
+    time ( bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo )
     echo "5 and 1 timed runs of zsh-right"
     for i in {1..5}; do
-      echo -n $i\:; bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
+      echo bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo "   $i"
     done
-    time (echo -n 6\:; bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo)
+    time ( bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo )
     kill ${server_pid}
     ;;
 esac

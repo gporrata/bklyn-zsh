@@ -18,24 +18,41 @@ import scheme from './scheme'
 
 const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
 
-const combine = (...items) => {
-  return _(items)
-    .map(item => (typeof item == 'function') ? item() : item)
-    .reduce((acc, item) => `${acc}${item}`)
+const combine = (...items /*: Array<string> */) => _(items).reduce((acc, item) => `${acc}${item}`)
+
+const home = _.defaultTo(process.env.HOME, '')
+
+const shortDir = (dir) => {
+  return dir.startsWith(home)
+    ? `~/${dir.slice(home.length + 1)}`
+    : dir
 }
+
+const sep = icons.seps.digital[0]
+//const sep = icons.seps.flames[0]
+//const sep = icons.seps.angles[0]
 
 const left = (data) => {
   return combine(
-    scheme.os.default(
-      osIcon, `${data.USER}@${data.HOST}`
-    ),
-    scheme.dir.default(
-      dirIcon(dirTypeOf(data.PWD)), data.PWD
-    ),
-    scheme.git.default(
-      gitStatusOf(data.GIT, data.GIT_STASH)
-    )
-  ) + ` \n${icons.prompt} `
+    // context
+    scheme.os.bg, scheme.os.fg0,
+    ' ', osIcon, ' ',
+    scheme.os.fg1, data.USER, '@', data.HOST, ' ',
+    scheme.os.bgAsFg, scheme.dir.bg, sep,
+    // dir
+    scheme.dir.bg, scheme.dir.fg0,
+    ' ', dirIcon(dirTypeOf(data.PWD)), ' ',
+    scheme.dir.fg1, shortDir(data.PWD),
+    scheme.dir.bgAsFg, scheme.vcs.bg, sep,
+    // vcs
+    scheme.vcs.bg, scheme.vcs.fg0,
+    ' ', gitStatusOf(data.GIT, data.GIT_STASH), ' ',
+    scheme.vcs.bgAsFg,
+    styles.bgColor.close, sep,
+    styles.color.close,
+    // show prompt
+    '\n', icons.prompt
+  )
 }
 
 const right = (data) => {
