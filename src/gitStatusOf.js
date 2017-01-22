@@ -2,6 +2,8 @@
 
 import _ from 'lodash'
 
+import icons from './icons'
+
 /* example of: git -c color.status=false status --porcelain=2 --branch
 
 # branch.oid eb744800f30f6b55147fa2c3a2f3e2591f0ff2a3
@@ -29,7 +31,7 @@ import _ from 'lodash'
 const findStaging = (gitStatus) => {
   const re = /^((?:\?)|(?:\d+ ([\.\w])))/gm
   let match
-  let staging = 'nc'
+  let staging = null
   while(match = re.exec(gitStatus)) {
     if(match[1] == '?' || (match[2] && match[2].startsWith('.'))) {
       return 'unstaged'
@@ -48,5 +50,14 @@ export default (gitStatus /*: string */, gitStash /*: string */) => {
   const [, up, down] = /^\# branch.ab \+(\d+) \-(\d+)/gm.exec(gitStatus) || []
   const staging = findStaging(gitStatus)
   const stashes = gitStash.split('\n').length - 1
-  return `${branch} +${up} -${down} stg ${staging} sta ${stashes}`
+
+  return _([
+    icons.vcs.branch, ' ',
+    staging && `${icons.vcs[staging]} `,
+    branch,
+    parseInt(up) && `${icons.vcs.up} ${up}`,
+    parseInt(down) && `${icons.vcs.down} ${down}`,
+    stashes && `${icons.vcs.stashes} ${stashes}`
+  ]).filter().reduce((e, acc) => `${e}${acc}`)
+  //return `${icons.vcs.branch} ${branch} +${up} -${down} stg ${staging} sta ${stashes}`
 }

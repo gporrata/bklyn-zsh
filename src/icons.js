@@ -34,9 +34,16 @@ export default {
   success: '\uf00c', // check, better might be '/uf046', '\uf058', or ''\uf05d'
   failed: '\uf00d', // X, better might be '\uf057', '\uf05c'
 
-  // vnc
-  github: '\uf113', // better might be '\uf1d2' or '\uf1d3'
-  branch: '\uf126',
+  // vcs, should i bother with other vc systems?
+  vcs: {
+    github: '\uf113', // better might be '\uf1d2' or '\uf1d3'
+    branch: '\uf126',
+    up: '\uf0aa',
+    down: '\uf0ab',
+    staged: '\uf069',
+    unstaged: '\uf06a',
+    stashes: '\uf0cf'
+  },
 
   // stats
   floppy: '\uf0c7',

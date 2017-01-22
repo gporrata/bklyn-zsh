@@ -21,21 +21,21 @@ const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
 const combine = (...items) => {
   return _(items)
     .map(item => (typeof item == 'function') ? item() : item)
-    .reduce((acc, item) => `${acc} ${item}`)
+    .reduce((acc, item) => `${acc}${item}`)
 }
 
 const left = (data) => {
   return combine(
-    scheme.os.bg(
+    scheme.os.default(
       osIcon, `${data.USER}@${data.HOST}`
     ),
-    scheme.dir.bg(
+    scheme.dir.default(
       dirIcon(dirTypeOf(data.PWD)), data.PWD
     ),
-    scheme.git.bg(
+    scheme.git.default(
       gitStatusOf(data.GIT, data.GIT_STASH)
     )
-  ) + `\n${icons.prompt} `
+  ) + ` \n${icons.prompt} `
 }
 
 const right = (data) => {
