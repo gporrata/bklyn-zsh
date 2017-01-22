@@ -8,6 +8,8 @@ bklyn_zsh_yaml_pad() {
 
 bklyn_zsh_data() {
   cat <<EOF
+PID: $!
+EXIT: $?
 PWD: $PWD
 USER: $USER
 HOST: $HOST

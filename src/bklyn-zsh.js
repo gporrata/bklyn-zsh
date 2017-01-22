@@ -25,7 +25,9 @@ const combine = (...items) => {
 const left = (data) => {
   return combine(
     osIcon, `${data.USER}@${data.HOST}`,
-    dirIcon(dirTypeOf(data.PWD)), data.PWD, gitStatusOf(data.GIT)
+    dirIcon(dirTypeOf(data.PWD)), data.PWD,
+    gitStatusOf(data.GIT),
+    `${data.PID} ${data.EXIT}`,
   ) + `\n${icons.prompt} `
 }
 

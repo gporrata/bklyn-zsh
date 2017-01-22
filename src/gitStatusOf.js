@@ -2,7 +2,7 @@
 
 import _ from 'lodash'
 
-/* git output example
+/* example of: git -c color.status=false status --porcelain=2 --branch
 
 # branch.oid eb744800f30f6b55147fa2c3a2f3e2591f0ff2a3
 # branch.head feature/revamp-using-node
@@ -16,7 +16,28 @@ import _ from 'lodash'
 ? hi
 ? src/gitStatusOf.js
 
+----------
+
+^branch.head (\w+) => branch name
+^branch.ab +(\d+) -(\d+) => num commits ahead & behind
+^? => file with untracked changes
+^(\d+) .(\w) => staged changes
+^(\d+) (\w). => unstaged changes
+? => untracked file (will be considered to be unstaged change)
 */
+
+const findStaging = (gitStatus) => {
+  const re = /^((?:\?)|(?:\d+ ([\.\w])))/
+  let match
+  let staging = 'nc'
+  while(match = re.exec(gitStatus)) {
+    if(match[1] == '?' || (match[2] && match[2].startsWith('.'))) {
+      return 'unstaged'
+    }
+    staging = 'staged'
+  }
+  return staging
+}
 
 export default (gitStatus /*: string */) => {
   if(gitStatus == '') {
@@ -25,5 +46,6 @@ export default (gitStatus /*: string */) => {
 
   const [, branch] = /^\# branch\.head (.+)$/gm.exec(gitStatus) || []
   const [, up, down] = /^\# branch.ab \+(\d+) \-(\d+)/gm.exec(gitStatus) || []
-  return `${branch} +${up} -${down}`
+  const staging = findStaging(gitStatus)
+  return `${branch} +${up} -${down} ${staging}`
 }
