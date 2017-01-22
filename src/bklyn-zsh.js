@@ -8,11 +8,13 @@ import koa from 'koa'
 import route from 'koa-route'
 import body from 'koa-better-body'
 import yaml from 'js-yaml'
+import styles from 'ansi-styles'
 
 import icons from './icons'
 import osIcon from './osIcon'
 import gitStatusOf from './gitStatusOf'
 import {dirIcon, dirTypeOf} from './dirTypeOf'
+import scheme from './scheme'
 
 const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
 
@@ -24,9 +26,15 @@ const combine = (...items) => {
 
 const left = (data) => {
   return combine(
-    osIcon, `${data.USER}@${data.HOST}`,
-    dirIcon(dirTypeOf(data.PWD)), data.PWD,
-    gitStatusOf(data.GIT, data.GIT_STASH)
+    scheme.os.bg(
+      osIcon, `${data.USER}@${data.HOST}`
+    ),
+    scheme.dir.bg(
+      dirIcon(dirTypeOf(data.PWD)), data.PWD
+    ),
+    scheme.git.bg(
+      gitStatusOf(data.GIT, data.GIT_STASH)
+    )
   ) + `\n${icons.prompt} `
 }
 

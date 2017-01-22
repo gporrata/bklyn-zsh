@@ -3,7 +3,7 @@
 import os from 'os'
 import icons from './icons'
 
-export default () => {
+const calcOsIcon = () => {
   let show = ''
   switch(os.platform()) {
     case 'darwin':
@@ -23,3 +23,5 @@ export default () => {
   }
   return show
 }
+
+export default calcOsIcon()
