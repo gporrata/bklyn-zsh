@@ -1,15 +1,27 @@
+// @flow
+
 import styles from 'ansi-styles'
 
-const styleWith = (fg, bg) => (...text) => `${styles.color.ansi16m.hex(fg)}${styles.bgColor.ansi16m.hex(bg)}${text}${styles.color.close}${styles.bgColor.close}`
+const bg = (color) => styles.bgColor.ansi16m.hex(color)
+const fg = (color) => styles.color.ansi16m.hex(color)
 
 export default {
   os: {
-    default: styleWith('#000000', '#34495E')
+    bg: bg('#1a2d3f'),
+    fg0: fg('#34495E'),
+    fg1: fg('#ffffff')
   },
   dir: {
-    default: styleWith('#000000', '#2980B9')
+    bg: bg('#094d77'),
+    fg0: fg('#2980B9'),
+    fg1: fg('#ffffff')
   },
-  git: {
-    default: styleWith('#000000', '#27AE60')
+  vcs: {
+    bg: bg('#033d1a'),
+    fg0: fg('#27AE60'),
+    fg1: fg('#ffffff'),
+    fg2: fg('#F1C40F'),
+    fgUnstaged: fg('#E74C3C'),
+    fgStaged: fg('#E67E22'),
   }
 }

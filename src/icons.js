@@ -1,5 +1,7 @@
 // @flow
 
+import scheme from './scheme'
+
 export default {
   // os
   os: {
@@ -40,9 +42,9 @@ export default {
     branch: '\uf126',
     up: '\uf0aa',
     down: '\uf0ab',
-    staged: '\uf069',
-    unstaged: '\uf06a',
-    stashes: '\uf0cf'
+    staged: `\uf069`,
+    unstaged: `${scheme.vcs.fgUnstaged}\uf06a${scheme.vcs.fg0}`,
+    stashes: `${scheme.vcs.fgStaged}\uf0cf${scheme.vcs.fg0}`
   },
 
   // stats
