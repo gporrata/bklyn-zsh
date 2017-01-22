@@ -42,9 +42,9 @@ export default {
     branch: '\uf126',
     up: '\uf0aa',
     down: '\uf0ab',
-    staged: `${scheme.vcs.fgStaged}\uf069${scheme.vcs.fg0}`,
+    staged: `\uf069`,
     unstaged: `${scheme.vcs.fgUnstaged}\uf06a${scheme.vcs.fg0}`,
-    stashes: '\uf0cf'
+    stashes: `${scheme.vcs.fgStaged}\uf0cf${scheme.vcs.fg0}`
   },
 
   // stats
