@@ -26,9 +26,15 @@ const left = (data) => {
   return combine(
     osIcon, `${data.USER}@${data.HOST}`,
     dirIcon(dirTypeOf(data.PWD)), data.PWD,
-    gitStatusOf(data.GIT, data.GITSTASH),
-    `${data.PID} ${data.EXIT}`
+    gitStatusOf(data.GIT, data.GIT_STASH)
   ) + `\n${icons.prompt} `
+}
+
+const right = (data) => {
+  return combine(
+    data.SSH_CLIENT, data.SSH_TTY,
+    data.EXIT, data.PID
+  )
 }
 
 koa()
@@ -37,7 +43,7 @@ koa()
     this.body = left(yaml.safeLoad(this.request.body))
   }))
   .use(route.post('/zsh-right', function *(next) {
-    this.body = '...'
+    this.body = right(yaml.safeLoad(this.request.body))
   }))
   .use(route.post('/tmux', function *(next) {
     this.body = '...'
