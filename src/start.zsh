@@ -39,14 +39,14 @@ case "$1" in
     docurl=(curl --data-binary @- -s -H"Content-Type:text/plain")
     echo -----
     bklyn_zsh_data
-    echo "5 and 1 timed runs of zsh-left"
+    echo "5, then 1 timed runs of zsh-left"
     for i in {1..5}; do
-      bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo "   $i"
+      bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo
     done
     time ( bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo )
-    echo "5 and 1 timed runs of zsh-right"
+    echo "5, then 1 timed runs of zsh-right"
     for i in {1..5}; do
-      echo bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo "   $i"
+      echo bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
     done
     time ( bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo )
     kill ${server_pid}
