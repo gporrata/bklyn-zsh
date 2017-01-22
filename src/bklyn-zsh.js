@@ -3,44 +3,17 @@
 import 'babel-core/register'
 import 'babel-polyfill'
 
-//
-
 import _ from 'lodash'
 import koa from 'koa'
 import route from 'koa-route'
+import body from 'koa-better-body'
+import yaml from 'js-yaml'
 
-const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
-
-koa()
-  .use(route.get('/zsh-left', function *(next){
-    this.body = 'TODO: zsh-left'
-  }))
-  .use(route.get('/zsh-right', function *(next) {
-    this.body = 'TODO: zsh-right'
-  }))
-  .use(route.get('/tmux', function *(next) {
-    this.body = 'TODO: tmux'
-  }))
-  .listen(serverPort, 'localhost')
-
-console.log('running bklyn-zsh...')
-
-/*
-import _ from 'lodash'
-import osIcon from './osIcon'
-import dirIcon from './dirIcon'
 import icons from './icons'
+import osIcon from './osIcon'
 import gitStatusOf from './gitStatusOf'
 
-const debug = process.env.bklyn_zsh_debug == 'DEBUG' ? console.error : _.noop
-
-//debug('BKLYN_ZSH_DIRTYPE='+process.env.BKLYN_ZSH_DIRTYPE)
-
-const cols = parseInt(process.env.BKLYN_ZSH_COLS)
-const gitStatus = _.defaultTo(process.env.BKLYN_ZSH_GIT, '')
-const user = _.defaultTo(process.env.USER, '')
-const host = _.defaultTo(process.env.HOST, '')
-const pwd = _.defaultTo(process.env.PWD, '')
+const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
 
 const combine = (...items) => {
   return _(items)
@@ -48,25 +21,24 @@ const combine = (...items) => {
     .reduce((acc, item) => `${acc} ${item}`)
 }
 
-const left = () => {
+const left = (data) => {
   return combine(
-    osIcon, `${user}@${host}`,
-    dirIcon, pwd, gitStatusOf(gitStatus)
+    osIcon, `${data.USER}@${data.HOST}`,
+    /*dirIcon,*/ data.PWD, gitStatusOf(data.GIT)
   ) + `\n${icons.prompt} `
 }
 
-const right = () => {
-  return ''
-}
+koa()
+  .use(body())
+  .use(route.post('/zsh-left', function *(next){
+    this.body = left(yaml.safeLoad(this.request.body))
+  }))
+  .use(route.post('/zsh-right', function *(next) {
+    this.body = '...'
+  }))
+  .use(route.post('/tmux', function *(next) {
+    this.body = '...'
+  }))
+  .listen(serverPort, 'localhost')
 
-
-switch(process.argv[2]) {
-case 'zsh-left':
-  console.log(left())
-  break
-case 'zsh-right':
-  console.log(right())
-  break
-}
-
-*/
+console.log(`bklyn-zsh started on ${serverPort}`)
