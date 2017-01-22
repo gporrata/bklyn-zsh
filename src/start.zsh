@@ -16,7 +16,7 @@ HOST: $HOST
 GIT: |
 `git -c color.status=false status --porcelain=2 --branch | bklyn_zsh_yaml_pad`
 GITSTASH: |
-`git stash list`
+`git stash list | bklyn_zsh_yaml_pad`
 EOF
 }
 

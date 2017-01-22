@@ -27,7 +27,7 @@ import _ from 'lodash'
 */
 
 const findStaging = (gitStatus) => {
-  const re = /^((?:\?)|(?:\d+ ([\.\w])))/
+  const re = /^((?:\?)|(?:\d+ ([\.\w])))/gm
   let match
   let staging = 'nc'
   while(match = re.exec(gitStatus)) {
@@ -39,7 +39,7 @@ const findStaging = (gitStatus) => {
   return staging
 }
 
-export default (gitStatus /*: string */) => {
+export default (gitStatus /*: string */, gitStash /*: string */) => {
   if(gitStatus == '') {
     return ''
   }
@@ -47,5 +47,6 @@ export default (gitStatus /*: string */) => {
   const [, branch] = /^\# branch\.head (.+)$/gm.exec(gitStatus) || []
   const [, up, down] = /^\# branch.ab \+(\d+) \-(\d+)/gm.exec(gitStatus) || []
   const staging = findStaging(gitStatus)
-  return `${branch} +${up} -${down} ${staging}`
+  const stashes = gitStash.split('\n').length - 1
+  return `${branch} +${up} -${down} stg ${staging} sta ${stashes}`
 }
