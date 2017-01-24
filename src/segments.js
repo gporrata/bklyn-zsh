@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import styles from 'ansi-styles'
+import stripAnsi from 'strip-ansi'
 
 export const bg = (color) => color ? styles.bgColor.ansi16m.hex(color) : ''
 export const fg = (color) => color ? styles.color.ansi16m.hex(color) : ''
@@ -16,65 +17,63 @@ const style = 'curves'
 
 const colorSeg = (seg) => [fg(seg.fg0), bg(seg.bg0)].join('')
 
-const leftSep = (sega, sebg) => {
-
-}
-
-export const combineLeftSegments = (cols, ...segments) => [
-  _(segments)
-  .filter(segment => segment.text)
-  .reduce((acc, segment, index, coll) => {
-    if(acc.lineLength == 0) {
-      return {
-        text: [
-          acc.text,
-          colorSeg(segment),
-          segment.text
-        ].join(''),
-        lineLength: segment.text.length,
-        priorSegment: segment
-      }
-    }
-    else if(acc.lineLength + acc.text.length < cols) {
-      return {
-        text: [
-          acc.text,
-          leftSep(acc.priorSegment, segment),
-          colorSeg(segment),
-          segment.text
-        ].join(''),
-        lineLength: acc.lineLength + segment.text.length,
-        priorSegment: segment
-      }
-    }
-    else {
-      return {
-        text: [
-          acc.text,
-          leftSep(acc.priorSegment, undefined),
-          '\n',
-          colorSeg(segment),
-          segment.text
-        ].join(''),
-        lineLength: 0,
-        priorSegment: segment
-      }
-    }
-  },
-  {
-    text: '',
-    lineLength: 0,
-    priorSegment: null
-  })
-  .text,
-  styles.color.close,
-  styles.bgColor.close,
+const leftSep = (sega, segb) => [
+  fg(sega.bg0), segb ? bg(segb.bg0) : styles.bgColor.close, seps[style][0], ' '
 ].join('')
 
-
-const rightSep = (sega, segb) => {
-  return [fg(segb.bg0), bg(sega && sega.bg0), seps[style][2], fg(segb.fg0), bg(segb.bg0)].join('')
+export const combineLeftSegments = (cols, ...segments) => {
+  const combined =
+    _(segments)
+    .filter(segment => segment.text)
+    .reduce((acc, segment, index, coll) => {
+      const segmentTextLength = stripAnsi(segment.text).length
+      if (acc.lineLength == 0) {
+        return {
+          text: [acc.text, colorSeg(segment), segment.text].join(''),
+          lineLength: segmentTextLength,
+          priorSegment: segment
+        }
+      } else if (acc.lineLength + segmentTextLength < cols) {
+        return {
+          text: [
+            acc.text,
+            leftSep(acc.priorSegment, segment),
+            colorSeg(segment),
+            segment.text
+          ].join(''),
+          lineLength: acc.lineLength + segmentTextLength,
+          priorSegment: segment
+        }
+      } else {
+        return {
+          text: [
+            acc.text,
+            leftSep(acc.priorSegment, undefined),
+            '\n',
+            colorSeg(segment),
+            segment.text
+          ].join(''),
+          lineLength: segmentTextLength,
+          priorSegment: segment
+        }
+      }
+    },
+    {
+     text: '',
+     lineLength: 0,
+     priorSegment: null
+    })
+  return [
+    combined.text,
+    leftSep(combined.priorSegment),
+    styles.color.close,
+    styles.bgColor.close,
+  ].join('')
 }
+
+const rightSep = (sega, segb) => [
+  fg(segb.bg0), bg(sega && sega.bg0), seps[style][2], fg(segb.fg0), bg(segb.bg0)
+].join('')
 
 export const combineRightSegments = (...segments) => [
   _(segments)

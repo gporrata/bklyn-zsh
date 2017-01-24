@@ -39,12 +39,12 @@ case "$1" in
     docurl=(curl --data-binary @- -s -H"Content-Type:text/plain")
     clear
     echo "-- 5, then 1 timed runs of zsh-left"
+    bklyn_zsh_data 1000 0 '' '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo
     bklyn_zsh_data 100 0 '' '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo
-    bklyn_zsh_data 50 0 '' '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo
+    bklyn_zsh_data 1000 0 '' /dev/pts/0 '88.133.195.51 57805 22' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo
     bklyn_zsh_data 100 0 '' /dev/pts/0 '88.133.195.51 57805 22' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo
-    bklyn_zsh_data 50 0 '' /dev/pts/0 '88.133.195.51 57805 22' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo
     bklyn_zsh_data 00 0 '' /dev/pts/0 '88.133.195.51 57805 22' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo
-    time ( bklyn_zsh_data 100 0 '' /dev/pts/0 '88.133.195.51 57805 22' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo )
+    time ( bklyn_zsh_data 1000 0 '' /dev/pts/0 '88.133.195.51 57805 22' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo )
     echo "-- 5, then 1 timed runs of zsh-right"
     bklyn_zsh_data 100 0 '' '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
     bklyn_zsh_data 100 0 2344 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
