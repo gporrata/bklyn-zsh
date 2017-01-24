@@ -60,7 +60,7 @@ export default {
   battery: ['\uf240', '\uf241', '\uf242', '\uf243', '\uf244'],
 
   // ssh
-  ssh: '\uf1be', // cloud, better might be '\uf289', or '\ue7ae'
+  ssh: ' \uf1be  ', // cloud, better might be '\uf289', or '\ue7ae'
 
   // separators, all from powerline
   seps: {

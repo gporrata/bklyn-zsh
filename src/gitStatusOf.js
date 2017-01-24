@@ -56,9 +56,9 @@ export default (gitStatus /*: string */, gitStash /*: string */) => {
     icons.vcs.branch, ' ',
     staging && `${icons.vcs[staging]} `,
     scheme.vcs.fg1, branch, scheme.vcs.fg0,
-    parseInt(up) && `${icons.vcs.up} ${scheme.vcs.fg1}${up}${scheme.vcs.fg0}`,
-    parseInt(down) && `${icons.vcs.down} ${scheme.vcs.fg1}${down}${scheme.vcs.fg0}`,
-    stashes && `${icons.vcs.stashes} ${scheme.vcs.fg1}${stashes}${scheme.vcs.fg0}`
+    parseInt(up) && ` ${icons.vcs.up} ${scheme.vcs.fg1}${up}${scheme.vcs.fg0}`,
+    parseInt(down) && ` ${icons.vcs.down} ${scheme.vcs.fg1}${down}${scheme.vcs.fg0}`,
+    stashes && ` ${icons.vcs.stashes} ${scheme.vcs.fg1}${stashes}${scheme.vcs.fg0}`
   ]).filter().reduce((e, acc) => `${e}${acc}`)
   //return `${icons.vcs.branch} ${branch} +${up} -${down} stg ${staging} sta ${stashes}`
 }

@@ -12,6 +12,12 @@ export default {
     fg0: fg('#34495E'),
     fg1: fg('#ffffff')
   },
+  ssh: {
+    bg: bg('#843200'),
+    bgAsFg: fg('#843200'),
+    fg0: fg('#D35400'),
+    fg1: fg('#ffffff'),
+  },
   dir: {
     bg: bg('#094d77'),
     bgAsFg: fg('#094d77'),

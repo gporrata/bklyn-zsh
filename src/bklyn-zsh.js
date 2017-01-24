@@ -18,7 +18,7 @@ import scheme from './scheme'
 
 const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
 
-const combine = (...items /*: Array<string> */) => _(items).reduce((acc, item) => `${acc}${item}`)
+const combine = (...items /*: Array<string> */) => items.join('')
 
 const home = _.defaultTo(process.env.HOME, '')
 
@@ -38,7 +38,11 @@ const left = (data) => {
     scheme.os.bg, scheme.os.fg0,
     ' ', osIcon, ' ',
     scheme.os.fg1, data.USER, '@', data.HOST, ' ',
-    scheme.os.bgAsFg, scheme.dir.bg, sep,
+    scheme.os.bgAsFg, scheme.ssh.bg, sep,
+    // ssh
+    scheme.ssh.bg, scheme.ssh.fg0, icons.ssh,
+    scheme.ssh.fg1, data.SSH_TTY, ' ', data.SSH_CLIENT, ' ',
+    scheme.ssh.bgAsFg, scheme.dir.bg, sep,
     // dir
     scheme.dir.bg, scheme.dir.fg0,
     ' ', dirIcon(dirTypeOf(data.PWD)), ' ',
@@ -57,10 +61,26 @@ const left = (data) => {
 
 const right = (data) => {
   return combine(
-    data.SSH_CLIENT, data.SSH_TTY,
-    data.EXIT, data.PID
+    data.EXIT, ' ', data.PID
   )
 }
+
+/* input to posts
+
+COLS: `tput cols`
+PID: $!
+EXIT: $?
+PWD: $PWD
+USER: $USER
+HOST: $HOST
+SSH_CLIENT: $SSH_CLIENT
+SSH_TTY: $SSH_TTY
+GIT: |
+`git -c color.status=false status --porcelain=2 --branch | bklyn_zsh_yaml_pad`
+GIT_STASH: |
+`git stash list | bklyn_zsh_yaml_pad`
+
+*/
 
 koa()
   .use(body())
