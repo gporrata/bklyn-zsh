@@ -12,13 +12,21 @@ const seps = {
   // sorry, not a fan of the other seps
 }
 
-export const combineLeftSegments = (cols, segments) => {
+const style = 'curves'
+
+const colorSeg = (seg) => [fg(seg.fg0), bg(seg.bg0)].join('')
+
+const leftSep = (sega, sebg) => {
+
+}
+
+export const combineLeftSegments = (cols, ...segments) => [
   _(segments)
-  .filter(!segments.text)
+  .filter(segment => segment.text)
   .reduce((acc, segment, index, coll) => {
     if(acc.lineLength == 0) {
       return {
-        text: acc.text + segment.text,
+        text: acc.text + colorSeg(segment) + segment.text,
         lineLength: segment.text.length,
         priorSegment: segment
       }
@@ -43,30 +51,30 @@ export const combineLeftSegments = (cols, segments) => {
     lineLength: 0,
     priorSegment: null
   })
-}
+  .text
+].join('')
+
 
 const rightSep = (sega, segb) => {
-  return [fg(segb.bg0), bg(sega && sega.bg0), seps.digital[2], fg(segb.fg0), bg(segb.bg0)].join('')
+  return [fg(segb.bg0), bg(sega && sega.bg0), seps[style][2], fg(segb.fg0), bg(segb.bg0)].join('')
 }
 
-export const combineRightSegments = (...segments) => {
-  return [
-    _(segments)
-      .filter(segment => segment.text)
-      .reduce((acc, segment, index, coll) => ({
-        text: [
-          acc.text,
-          rightSep(acc.priorSegment, segment),
-          segment.text
-        ].join(''),
-        priorSegment: segment
-      }),
-      {
-        text: '',
-        priorSegment: null
-      })
-      .text,
-    styles.color.close,
-    styles.bgColor.close,
-  ].join('')
-}
+export const combineRightSegments = (...segments) => [
+  _(segments)
+    .filter(segment => segment.text)
+    .reduce((acc, segment, index, coll) => ({
+      text: [
+        acc.text,
+        rightSep(acc.priorSegment, segment),
+        segment.text
+      ].join(''),
+      priorSegment: segment
+    }),
+    {
+      text: '',
+      priorSegment: null
+    })
+    .text,
+  styles.color.close,
+  styles.bgColor.close,
+].join('')

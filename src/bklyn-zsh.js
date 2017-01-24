@@ -15,9 +15,10 @@ import osIcon from './osIcon'
 import gitStatusOf from './gitStatusOf'
 import {dirIcon, dirTypeOf} from './dirTypeOf'
 import scheme from './scheme'
+import contextSegment from './contextSegment'
 import exitCodeSegment from './exitCodeSegment'
 import pidSegment from './pidSegment'
-import {combineRightSegments} from './segments'
+import {combineLeftSegments, combineRightSegments} from './segments'
 
 const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
 
@@ -35,7 +36,11 @@ const sepl = icons.seps.digital[0]
 //const sepl = icons.seps.flames[0]
 //const sepl = icons.seps.angles[0]
 
-const left = (data) => {
+const left = (data) =>
+  combineLeftSegments(data.COLS,
+    contextSegment(data.USER, data.HOST)
+  )
+  /*
   return combine(
     // context
     scheme.os.bg, scheme.os.fg0,
@@ -60,16 +65,16 @@ const left = (data) => {
     // show prompt
     '\n', icons.prompt
   )
-}
+  */
 
 const sepr =  icons.seps.digital[1]
 
-const right = (data) => {
-  return combineRightSegments(
+const right = (data) =>
+  combineRightSegments(
     exitCodeSegment(data.EXIT),
     pidSegment(data.PID)
   )
-}
+
 
 /* input to posts
 
