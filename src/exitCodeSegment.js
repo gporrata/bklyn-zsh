@@ -1,5 +1,10 @@
-import icons from './icons'
-import scheme from './scheme'
+import {fg} from './segments'
+
+const fgSuccess = '#033d1a'
+const fgFailed = '#C0392B'
+const bg0 = '#ECF0F1'
+const fg0 = '#a7aeaf'
+const fg1 = '#000000'
 
 export default (exitCode) => {
   if(!exitCode && exitCode != 0) {
@@ -8,11 +13,7 @@ export default (exitCode) => {
     }
   }
   else {
-    const text = (exitCode == 0) ? '\uf00c  ' : `\uf00d ${exitCode} `
-    return {
-      text,
-      bg: '#ffffff',
-      fg0: '#000000',
-    }
+    const text = (exitCode == 0) ? `${fg(fgSuccess)}\uf00c${fg(fg0)}  ` : `${fg(fgFailed)}\uf00d${fg(fg1)} ${exitCode} `
+    return {text, bg0, fg0}
   }
 }

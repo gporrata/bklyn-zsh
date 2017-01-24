@@ -44,14 +44,14 @@ case "$1" in
     bklyn_zsh_data 100 0 '' /dev/pts/0 '88.133.195.51 57805 22' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo
     bklyn_zsh_data 50 0 '' /dev/pts/0 '88.133.195.51 57805 22' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo
     bklyn_zsh_data 00 0 '' /dev/pts/0 '88.133.195.51 57805 22' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo
-    time ( bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo )
+    time ( bklyn_zsh_data 100 0 '' /dev/pts/0 '88.133.195.51 57805 22' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-left && echo )
     echo "-- 5, then 1 timed runs of zsh-right"
     bklyn_zsh_data 100 0 '' '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
     bklyn_zsh_data 100 0 2344 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
     bklyn_zsh_data 100 -1 8954 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
     bklyn_zsh_data 100 -2 7892 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
     bklyn_zsh_data 100 -3 3049 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
-    time ( bklyn_zsh_data | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo )
+    time ( bklyn_zsh_data 100 -3 8234 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo )
     kill ${server_pid}
     ;;
 esac
