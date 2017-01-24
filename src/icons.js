@@ -33,8 +33,10 @@ export default {
   },
 
   // process stats
-  success: '\uf00c', // check, better might be '/uf046', '\uf058', or ''\uf05d'
-  failed: '\uf00d', // X, better might be '\uf057', '\uf05c'
+  exit: {
+    success: `${scheme.exit.success}\uf00c${scheme.exit.fg0}`, // check, better might be '/uf046', '\uf058', or ''\uf05d'
+    failed: `${scheme.exit.failed}\uf00d${scheme.exit.fg0}`, // X, better might be '\uf057', '\uf05c'
+  },
 
   // vcs, should i bother with other vc systems?
   vcs: {

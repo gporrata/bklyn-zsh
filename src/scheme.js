@@ -32,5 +32,12 @@ export default {
     fg2: fg('#F1C40F'),
     fgUnstaged: fg('#E74C3C'),
     fgStaged: fg('#E67E22'),
-  }
+  },
+  exit: {
+    bg: bg('#7F8C8D'),
+    bgAsFg: fg('#7F8C8D'),
+    fg0: fg('#363c3d'),
+    success: fg('#033d1a'),
+    failed: fg('#C0392B'),
+  },
 }

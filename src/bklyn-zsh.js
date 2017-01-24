@@ -15,6 +15,9 @@ import osIcon from './osIcon'
 import gitStatusOf from './gitStatusOf'
 import {dirIcon, dirTypeOf} from './dirTypeOf'
 import scheme from './scheme'
+import exitCodeSegment from './exitCodeSegment'
+import pidSegment from './pidSegment'
+import {combineRightSegments} from './segments'
 
 const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
 
@@ -28,9 +31,9 @@ const shortDir = (dir) => {
     : dir
 }
 
-const sep = icons.seps.digital[0]
-//const sep = icons.seps.flames[0]
-//const sep = icons.seps.angles[0]
+const sepl = icons.seps.digital[0]
+//const sepl = icons.seps.flames[0]
+//const sepl = icons.seps.angles[0]
 
 const left = (data) => {
   return combine(
@@ -38,30 +41,33 @@ const left = (data) => {
     scheme.os.bg, scheme.os.fg0,
     ' ', osIcon, ' ',
     scheme.os.fg1, data.USER, '@', data.HOST, ' ',
-    scheme.os.bgAsFg, scheme.ssh.bg, sep,
+    scheme.os.bgAsFg, scheme.ssh.bg, sepl,
     // ssh
     scheme.ssh.bg, scheme.ssh.fg0, icons.ssh,
     scheme.ssh.fg1, data.SSH_TTY, ' ', data.SSH_CLIENT, ' ',
-    scheme.ssh.bgAsFg, scheme.dir.bg, sep,
+    scheme.ssh.bgAsFg, scheme.dir.bg, sepl,
     // dir
     scheme.dir.bg, scheme.dir.fg0,
     ' ', dirIcon(dirTypeOf(data.PWD)), ' ',
     scheme.dir.fg1, shortDir(data.PWD),
-    scheme.dir.bgAsFg, scheme.vcs.bg, sep,
+    scheme.dir.bgAsFg, scheme.vcs.bg, sepl,
     // vcs
     scheme.vcs.bg, scheme.vcs.fg0,
     ' ', gitStatusOf(data.GIT, data.GIT_STASH), ' ',
     scheme.vcs.bgAsFg,
-    styles.bgColor.close, sep,
+    styles.bgColor.close, sepl,
     styles.color.close,
     // show prompt
     '\n', icons.prompt
   )
 }
 
+const sepr =  icons.seps.digital[1]
+
 const right = (data) => {
-  return combine(
-    data.EXIT, ' ', data.PID
+  return combineRightSegments(
+    exitCodeSegment(data.EXIT),
+    pidSegment(data.PID)
   )
 }
 
