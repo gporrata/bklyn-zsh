@@ -13,5 +13,5 @@ export default (tty, client) =>
     :
     {
       bg0, fg0,
-      text: `${fg(fg1)}\uf1be${fg(fg0)}  ${tty} ${client}`
+      text: `\uf1be  ${fg(fg1)}${tty} ${client}`
     }

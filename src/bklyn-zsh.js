@@ -17,21 +17,12 @@ import {dirIcon, dirTypeOf} from './dirTypeOf'
 import scheme from './scheme'
 import contextSegment from './contextSegment'
 import sshSegment from './sshSegment'
+import dirSegment from './dirSegment'
 import exitCodeSegment from './exitCodeSegment'
 import pidSegment from './pidSegment'
 import {combineLeftSegments, combineRightSegments} from './segments'
 
 const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
-
-const combine = (...items /*: Array<string> */) => items.join('')
-
-const home = _.defaultTo(process.env.HOME, '')
-
-const shortDir = (dir) => {
-  return dir.startsWith(home)
-    ? `~/${dir.slice(home.length + 1)}`
-    : dir
-}
 
 const sepl = icons.seps.digital[0]
 //const sepl = icons.seps.flames[0]
@@ -40,7 +31,8 @@ const sepl = icons.seps.digital[0]
 const left = (data) =>
   combineLeftSegments(data.COLS,
     contextSegment(data.USER, data.HOST),
-    sshSegment(data.SSH_TTY, data.SSH_CLIENT)
+    sshSegment(data.SSH_TTY, data.SSH_CLIENT),
+    dirSegment(data.PWD),
   )
   /*
   return combine(

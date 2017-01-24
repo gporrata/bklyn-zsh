@@ -1,10 +1,41 @@
+// @flow
+
+import os from 'os'
+import {fg} from './segments'
+
 const bg0 = '#1a2d3f'
 const fg0 = '#34495E'
 const fg1 = '#ffffff'
 
-export default (user, host) => ({
+const icons = {
+  darwin: '\uf179',
+  freebsd: 'undefined',
+  linux: '\uf17c',
+    redhat: '\uf309',
+    ubuntu: '\ue73a',
+  win32: '\uf17a',
+}
+
+const calcOsIcon = () => {
+  switch(os.platform()) {
+    case 'darwin':
+      return icons.darwin
+    case 'freebsd':
+      return icons.freebsd
+    case 'linux':
+      return icons.linux
+    case 'win32':
+      return icons.win32
+    default:
+      return ''
+  }
+}
+
+const osIcon = calcOsIcon()
+
+export default (user /*: string */, host /*: string */) => ({
   bg0, fg0,
   text: [
-    user, '@', host
+    osIcon, ' ', fg(fg1), user, '@', host
   ].join(''),
 })
