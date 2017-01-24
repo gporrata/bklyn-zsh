@@ -16,6 +16,7 @@ import gitStatusOf from './gitStatusOf'
 import {dirIcon, dirTypeOf} from './dirTypeOf'
 import scheme from './scheme'
 import contextSegment from './contextSegment'
+import sshSegment from './sshSegment'
 import exitCodeSegment from './exitCodeSegment'
 import pidSegment from './pidSegment'
 import {combineLeftSegments, combineRightSegments} from './segments'
@@ -38,7 +39,8 @@ const sepl = icons.seps.digital[0]
 
 const left = (data) =>
   combineLeftSegments(data.COLS,
-    contextSegment(data.USER, data.HOST)
+    contextSegment(data.USER, data.HOST),
+    sshSegment(data.SSH_TTY, data.SSH_CLIENT)
   )
   /*
   return combine(

@@ -26,21 +26,36 @@ export const combineLeftSegments = (cols, ...segments) => [
   .reduce((acc, segment, index, coll) => {
     if(acc.lineLength == 0) {
       return {
-        text: acc.text + colorSeg(segment) + segment.text,
+        text: [
+          acc.text,
+          colorSeg(segment),
+          segment.text
+        ].join(''),
         lineLength: segment.text.length,
         priorSegment: segment
       }
     }
     else if(acc.lineLength + acc.text.length < cols) {
       return {
-        text: acc.text + leftSep(priorSegment, segment) + segment.text,
+        text: [
+          acc.text,
+          leftSep(acc.priorSegment, segment),
+          colorSeg(segment),
+          segment.text
+        ].join(''),
         lineLength: acc.lineLength + segment.text.length,
         priorSegment: segment
       }
     }
     else {
       return {
-        text: acc.text + leftSep(priorSegment, undefined) + '\n' + segment.text,
+        text: [
+          acc.text,
+          leftSep(acc.priorSegment, undefined),
+          '\n',
+          colorSeg(segment),
+          segment.text
+        ].join(''),
         lineLength: 0,
         priorSegment: segment
       }
@@ -51,7 +66,9 @@ export const combineLeftSegments = (cols, ...segments) => [
     lineLength: 0,
     priorSegment: null
   })
-  .text
+  .text,
+  styles.color.close,
+  styles.bgColor.close,
 ].join('')
 
 
