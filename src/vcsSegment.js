@@ -2,8 +2,24 @@
 
 import _ from 'lodash'
 
-import icons from './icons'
-import scheme from './scheme'
+import {fg} from './segments'
+
+const bg0 = '#033d1a'
+const fg0 = '#27AE60'
+const fg1 = '#ffffff'
+const fg2 = '#F1C40F'
+const fgUnstaged = '#E74C3C'
+const fgStaged = '#E67E22'
+
+const icons = {
+  github: '\uf113', // better might be '\uf1d2' or '\uf1d3'
+  branch: '\uf126',
+  up: '\uf0aa',
+  down: '\uf0ab',
+  staged: `\uf069`,
+  unstaged: `${fg(fgUnstaged)}\uf06a${fg(fg0)}`,
+  stashes: `${fg(fgStaged)}\uf0cf${fg(fg0)}`
+}
 
 /* example of: git -c color.status=false status --porcelain=2 --branch
 
@@ -44,7 +60,7 @@ const findStaging = (gitStatus) => {
 
 export default (gitStatus /*: string */, gitStash /*: string */) => {
   if(gitStatus == '') {
-    return ''
+    return {text: null}
   }
 
   const [, branch] = /^\# branch\.head (.+)$/gm.exec(gitStatus) || []
@@ -52,13 +68,16 @@ export default (gitStatus /*: string */, gitStash /*: string */) => {
   const staging = findStaging(gitStatus)
   const stashes = gitStash.split('\n').length - 1
 
-  return _([
-    icons.vcs.branch, ' ',
-    staging && `${icons.vcs[staging]} `,
-    scheme.vcs.fg1, branch, scheme.vcs.fg0,
-    parseInt(up) && ` ${icons.vcs.up} ${scheme.vcs.fg1}${up}${scheme.vcs.fg0}`,
-    parseInt(down) && ` ${icons.vcs.down} ${scheme.vcs.fg1}${down}${scheme.vcs.fg0}`,
-    stashes && ` ${icons.vcs.stashes} ${scheme.vcs.fg1}${stashes}${scheme.vcs.fg0}`
-  ]).filter().reduce((e, acc) => `${e}${acc}`)
-  //return `${icons.vcs.branch} ${branch} +${up} -${down} stg ${staging} sta ${stashes}`
+  return {
+    bg0, fg0,
+    text: [
+      icons.branch, ' ',
+      staging ? `${icons[staging]} ` : undefined,
+      fg(fg1), branch, fg(fg0),
+      parseInt(up) ? ` ${icons.up} ${fg(fg1)}${up}${fg(fg0)}` : undefined,
+      parseInt(down) ? ` ${icons.down} ${fg(fg1)}${down}${fg(fg0)}` : undefined,
+      stashes ? ` ${icons.stashes} ${fg(fg1)}${stashes}${fg(fg0)}` : undefined
+    ].join('')
+      // TODO: change reduce here to .value().join('')
+  }
 }

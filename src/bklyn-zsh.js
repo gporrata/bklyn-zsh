@@ -10,30 +10,23 @@ import body from 'koa-better-body'
 import yaml from 'js-yaml'
 import styles from 'ansi-styles'
 
-import icons from './icons'
-import osIcon from './osIcon'
-import gitStatusOf from './gitStatusOf'
-import {dirIcon, dirTypeOf} from './dirTypeOf'
-import scheme from './scheme'
 import contextSegment from './contextSegment'
 import sshSegment from './sshSegment'
 import dirSegment from './dirSegment'
 import exitCodeSegment from './exitCodeSegment'
 import pidSegment from './pidSegment'
+import vcsSegment from './vcsSegment'
 import {combineLeftSegments, combineRightSegments} from './segments'
 
 const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
-
-const sepl = icons.seps.digital[0]
-//const sepl = icons.seps.flames[0]
-//const sepl = icons.seps.angles[0]
 
 const left = (data) =>
   combineLeftSegments(data.COLS,
     contextSegment(data.USER, data.HOST),
     sshSegment(data.SSH_TTY, data.SSH_CLIENT),
     dirSegment(data.PWD),
-  )
+    vcsSegment(data.GIT, data.GIT_STASH)
+  ) + '\n\uf489 '
   /*
   return combine(
     // context
@@ -60,8 +53,6 @@ const left = (data) =>
     '\n', icons.prompt
   )
   */
-
-const sepr =  icons.seps.digital[1]
 
 const right = (data) =>
   combineRightSegments(
