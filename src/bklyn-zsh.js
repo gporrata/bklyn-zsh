@@ -54,8 +54,14 @@ GIT_STASH: |
 
 koa()
   .use(body())
+  .use(route.post('/left', function *(next){
+    this.body = left(yaml.safeLoad(this.request.body))
+  }))
   .use(route.post('/zsh-left', function *(next){
     this.body = ansiZshProtect(left(yaml.safeLoad(this.request.body)))
+  }))
+  .use(route.post('/right', function *(next) {
+    this.body = right(yaml.safeLoad(this.request.body))
   }))
   .use(route.post('/zsh-right', function *(next) {
     this.body = ansiZshProtect(right(yaml.safeLoad(this.request.body)))
