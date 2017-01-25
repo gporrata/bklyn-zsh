@@ -14,91 +14,28 @@ const seps = {
   // sorry, not a fan of the other seps
 }
 
-const style = 'flames'
+const style = 'curves'
 
-const mainBg0 = '#094d77'
+const leftBg0 = '#094d77'
 
-export const combineLeftSegments = (cols, ...segments) => (
+export const combineLeftSegments = (cols, ...segments) => [
+  // set bg color for entire line
+  bg(leftBg0),
+  // all segments combined
   _(segments)
-  .filter(segment => segment.text)
-  .map(segment => [
-    // line curve
-    fg(segment.bg0),
-    seps[style][2],
-    // text
-    fg(segment.fg0),
-    bg(segment.bg0),
-    segment.text,
-    // end curve
-    fg(segment.bg0),
-    styles.bgColor.close,
-    seps[style][0], '  '
-  ].join(''))
-  .value()
-  .concat(
-    styles.color.close,
-    styles.bgColor.close
-  )
-  .join('')
-)
-
-/* this is good for adding sep on the right side of each segment
-const colorSeg = (seg) => [fg(seg.fg0), bg(seg.bg0)].join('')
-
-const leftSep = (sega, segb) => [
-  fg(sega.bg0), segb ? bg(segb.bg0) : styles.bgColor.close, seps[style][0], ' '
-].join('')
-
-export const combineLeftSegments = (cols, ...segments) => {
-  const combined =
-    _(segments)
     .filter(segment => segment.text)
-    .reduce((acc, segment, index, coll) => {
-      const segmentTextLength = ansiStrip(segment.text).length
-      if (acc.lineLength == 0) {
-        return {
-          text: [acc.text, colorSeg(segment), segment.text].join(''),
-          lineLength: segmentTextLength,
-          priorSegment: segment
-        }
-      } else if (acc.lineLength + segmentTextLength < cols) {
-        return {
-          text: [
-            acc.text,
-            leftSep(acc.priorSegment, segment),
-            colorSeg(segment),
-            segment.text
-          ].join(''),
-          lineLength: acc.lineLength + segmentTextLength,
-          priorSegment: segment
-        }
-      } else {
-        return {
-          text: [
-            acc.text,
-            leftSep(acc.priorSegment, undefined),
-            '\n',
-            colorSeg(segment),
-            segment.text
-          ].join(''),
-          lineLength: segmentTextLength,
-          priorSegment: segment
-        }
-      }
-    },
-    {
-     text: '',
-     lineLength: 0,
-     priorSegment: null
-    })
-  return [
-    combined.text,
-    leftSep(combined.priorSegment),
-    styles.color.close,
-    styles.bgColor.close,
-  ].join('')
-}
-*/
+    .map(segment => [
+      fg(segment.fg0),
+      segment.text, ' ',
+    ].join(''))
+    .value()
+    .join(''),
+  // end of line
+  fg(leftBg0),
+  styles.bgColor.close,
+  seps[style][0],
+  styles.color.close,
+].join('')
 
 const rightSep = (sega, segb) => [
   fg(segb.bg0), bg(sega && sega.bg0), seps[style][2], fg(segb.fg0), bg(segb.bg0)
