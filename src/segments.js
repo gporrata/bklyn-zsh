@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import styles from 'ansi-styles'
-import stripAnsi from 'strip-ansi'
+
+import {ansiStrip} from './ansiStringManipulation'
 
 export const bg = (color) => color ? styles.bgColor.ansi16m.hex(color) : ''
 export const fg = (color) => color ? styles.color.ansi16m.hex(color) : ''
@@ -26,7 +27,7 @@ export const combineLeftSegments = (cols, ...segments) => {
     _(segments)
     .filter(segment => segment.text)
     .reduce((acc, segment, index, coll) => {
-      const segmentTextLength = stripAnsi(segment.text).length
+      const segmentTextLength = ansiStrip(segment.text).length
       if (acc.lineLength == 0) {
         return {
           text: [acc.text, colorSeg(segment), segment.text].join(''),

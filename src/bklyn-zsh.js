@@ -8,6 +8,7 @@ import koa from 'koa'
 import route from 'koa-route'
 import body from 'koa-better-body'
 import yaml from 'js-yaml'
+import stripAnsi from 'strip-ansi'
 
 import contextSegment from './contextSegment'
 import sshSegment from './sshSegment'
@@ -15,6 +16,7 @@ import dirSegment from './dirSegment'
 import exitCodeSegment from './exitCodeSegment'
 import pidSegment from './pidSegment'
 import vcsSegment from './vcsSegment'
+import {ansiZshProtect} from './ansiStringManipulation'
 import {combineLeftSegments, combineRightSegments} from './segments'
 
 const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
@@ -53,10 +55,10 @@ GIT_STASH: |
 koa()
   .use(body())
   .use(route.post('/zsh-left', function *(next){
-    this.body = left(yaml.safeLoad(this.request.body))
+    this.body = ansiZshProtect(left(yaml.safeLoad(this.request.body)))
   }))
   .use(route.post('/zsh-right', function *(next) {
-    this.body = right(yaml.safeLoad(this.request.body))
+    this.body = ansiZshProtect(right(yaml.safeLoad(this.request.body)))
   }))
   .use(route.post('/tmux', function *(next) {
     this.body = '...'

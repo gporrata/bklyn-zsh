@@ -18,7 +18,7 @@ const icons = {
   down: '\uf0ab',
   staged: `\uf069`,
   unstaged: `${fg(fgUnstaged)}\uf06a${fg(fg0)}`,
-  stashes: `${fg(fgStaged)}\uf0cf${fg(fg0)}`
+  stashes: `${fg(fgStaged)}\uf01c${fg(fg0)}`
 }
 
 /* example of: git -c color.status=false status --porcelain=2 --branch

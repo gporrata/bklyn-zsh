@@ -33,8 +33,8 @@ EOF
 }
 
 bklyn_zsh_precmd_hook() {
-  bklyn_zsh_last_exit=$?
   bklyn_zsh_last_pid=$!
+  bklyn_zsh_last_exit=$?
   PROMPT=`bklyn_zsh_data $bklyn_zsh_last_exit $bklyn_zsh_last_pid | curl --data-binary @- -s -H"Content-Type:text/plain" http://127.0.0.1:${bklyn_zsh_port}/zsh-left`
   RPROMPT=`bklyn_zsh_data $bklyn_zsh_last_exit $bklyn_zsh_last_pid | curl --data-binary @- -s -H"Content-Type:text/plain" http://127.0.0.1:${bklyn_zsh_port}/zsh-right`
 }

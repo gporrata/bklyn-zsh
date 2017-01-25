@@ -52,6 +52,10 @@ case "$1" in
     bklyn_zsh_data 100 127 7892 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
     bklyn_zsh_data 100 -33 3049 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
     time ( bklyn_zsh_data 100 -3 8234 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo )
+    echo "verify ansi escape sequence protection"
+    rm -f out
+    bklyn_zsh_data 100 -3 8234 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right > out
+    cat -v out
     kill ${server_pid}
     ;;
 esac

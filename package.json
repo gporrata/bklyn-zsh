@@ -5,8 +5,7 @@
     "koa": "^1.2.4",
     "koa-better-body": "^3.0.2",
     "koa-route": "^2.4.2",
-    "lodash": "^4.17.4",
-    "strip-ansi": "^3.0.1"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
