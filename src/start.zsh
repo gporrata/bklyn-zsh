@@ -49,8 +49,8 @@ case "$1" in
     bklyn_zsh_data 100 0 '' '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
     bklyn_zsh_data 100 0 2344 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
     bklyn_zsh_data 100 -1 8954 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
-    bklyn_zsh_data 100 -2 7892 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
-    bklyn_zsh_data 100 -3 3049 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
+    bklyn_zsh_data 100 127 7892 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
+    bklyn_zsh_data 100 -33 3049 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo
     time ( bklyn_zsh_data 100 -3 8234 '' '' | $docurl http://127.0.0.1:${BKLYN_ZSH_PORT}/zsh-right && echo )
     kill ${server_pid}
     ;;

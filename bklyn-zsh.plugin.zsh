@@ -1,45 +1,42 @@
-bklyn_zsh_script=${0:A}
-bklyn_zsh_exec="node ${bklyn_zsh_script:h}/dist/bklyn-zsh-bundle.js"
-bklyn_zsh_git="git -c color.status=false status --porcelain=2 --branch"
-bklyn_zsh_git_stash="git stash list"
+bklyn_zsh_port=9988
 
-export HOST=`hostname`
+bklyn_zsh_existing_pid=`lsof -n -i:$bklyn_zsh_port | grep LISTEN | awk -F ' ' '{print $2}'`
 
-bklyn_zsh_dirtype() {
-  if [[ -f 'package.json' ]]; then
-    echo 'npm'
-  elif [[ -d 'node_modules' ]]; then
-    echo 'node'
-  elif [[ -f 'build.sbt' ]]; then
-    echo 'scala'
-  elif [[ -f 'pom.xml' ]]; then
-    echo 'maven'
-  elif [[ -f 'build.xml' ]]; then
-    echo 'java'
-  elif [[ -f 'makefile' ]]; then
-    echo 'cpp'
-  elif [[ $PWD == $HOME ]]; then
-    echo 'home'
-  else
-    echo 'other'
-  fi
+kill -KILL `lsof -n -i:${bklyn_zsh_port} | grep LISTEN | awk -F ' ' '{print $2}'`
+PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
+
+#if ! lsof -n -i:${bklyn_zsh_port} | grep LISTEN >/dev/null; then
+#  PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
+#fi
+
+bklyn_zsh_yaml_pad() {
+  while read line; do
+    echo "  $line"
+  done
 }
 
-# for testing; reload this quickly
-rt() {
-  source ${bklyn_zsh_script}
-  time BKLYN_ZSH_COLS=$(tput cols) HOST=$HOST BKLYN_ZSH_DIRTYPE=$(bklyn_zsh_dirtype) BKLYN_ZSH_GIT=$(${=bklyn_zsh_git} 2>/dev/null) \
-    ${=bklyn_zsh_exec} zsh-left >/dev/null
-  time BKLYN_ZSH_COLS=$(tput cols) ${=bklyn_zsh_exec} zsh-right >/dev/null
+bklyn_zsh_data() {
+  cat <<EOF
+COLS: $COLUMNS
+EXIT: $1
+PID: $2
+PWD: $PWD
+USER: $USER
+HOST: $HOST
+SSH_CLIENT: $SSH_CLIENT
+SSH_TTY: $SSH_TTY
+GIT: |
+`(git -c color.status=false status --porcelain=2 --branch 2>/dev/null || echo -n '') | bklyn_zsh_yaml_pad`
+GIT_STASH: |
+`(git stash list 2>/dev/null || echo -n '') | bklyn_zsh_yaml_pad`
+EOF
 }
 
-#
-bklyn-zsh-precmd-hook() {
-  bklyn_zsh_cols=`tput cols`
-  PROMPT=`BKLYN_ZSH_COLS=${bklyn_zsh_cols} HOST=$HOST \
-    BKLYN_ZSH_DIRTYPE=$(bklyn_zsh_dirtype) BKLYN_ZSH_GIT=$(${=bklyn_zsh_git} 2>/dev/null) \
-    node ${bklyn_zsh_script:h}/dist/bklyn-zsh-bundle.js zsh-left --cols=$cols`
-  RPROMPT=`BKLYN_ZSH_COLS=${bklyn_zsh_cols} node ${bklyn_zsh_script:h}/dist/bklyn-zsh-bundle.js zsh-right --cols=$cols`
+bklyn_zsh_precmd_hook() {
+  bklyn_zsh_last_exit=$?
+  bklyn_zsh_last_pid=$!
+  PROMPT=`bklyn_zsh_data $bklyn_zsh_last_exit $bklyn_zsh_last_pid | curl --data-binary @- -s -H"Content-Type:text/plain" http://127.0.0.1:${bklyn_zsh_port}/zsh-left`
+  RPROMPT=`bklyn_zsh_data $bklyn_zsh_last_exit $bklyn_zsh_last_pid | curl --data-binary @- -s -H"Content-Type:text/plain" http://127.0.0.1:${bklyn_zsh_port}/zsh-right`
 }
 
 # make sure to install bklyn-zsh only once
@@ -47,5 +44,5 @@ if [[ $bklyn_zsh_installed != 'installed' ]]; then
   bklyn_zsh_installed='installed'
 
   [[ -z $precmd_functions ]] && precmd_functions=()
-  precmd_functions=($precmd_functions bklyn-zsh-precmd-hook)
+  precmd_functions=($precmd_functions bklyn_zsh_precmd_hook)
 fi

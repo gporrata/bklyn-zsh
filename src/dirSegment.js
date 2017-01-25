@@ -5,7 +5,7 @@ import fs from 'fs'
 import {fg} from './segments'
 
 const bg0 = '#094d77'
-const fg0 = '#2980B9'
+const fg0 = '#33a4ea'
 const fg1 = '#ffffff'
 
 const canAccess = (fname) => {
@@ -14,7 +14,6 @@ const canAccess = (fname) => {
     return true
   }
   catch(error) {
-    cosole.log(error)
     return false
   }
 }

@@ -8,7 +8,6 @@ import koa from 'koa'
 import route from 'koa-route'
 import body from 'koa-better-body'
 import yaml from 'js-yaml'
-import styles from 'ansi-styles'
 
 import contextSegment from './contextSegment'
 import sshSegment from './sshSegment'
@@ -27,39 +26,12 @@ const left = (data) =>
     dirSegment(data.PWD),
     vcsSegment(data.GIT, data.GIT_STASH)
   ) + '\n\uf489 '
-  /*
-  return combine(
-    // context
-    scheme.os.bg, scheme.os.fg0,
-    ' ', osIcon, ' ',
-    scheme.os.fg1, data.USER, '@', data.HOST, ' ',
-    scheme.os.bgAsFg, scheme.ssh.bg, sepl,
-    // ssh
-    scheme.ssh.bg, scheme.ssh.fg0, icons.ssh,
-    scheme.ssh.fg1, data.SSH_TTY, ' ', data.SSH_CLIENT, ' ',
-    scheme.ssh.bgAsFg, scheme.dir.bg, sepl,
-    // dir
-    scheme.dir.bg, scheme.dir.fg0,
-    ' ', dirIcon(dirTypeOf(data.PWD)), ' ',
-    scheme.dir.fg1, shortDir(data.PWD),
-    scheme.dir.bgAsFg, scheme.vcs.bg, sepl,
-    // vcs
-    scheme.vcs.bg, scheme.vcs.fg0,
-    ' ', gitStatusOf(data.GIT, data.GIT_STASH), ' ',
-    scheme.vcs.bgAsFg,
-    styles.bgColor.close, sepl,
-    styles.color.close,
-    // show prompt
-    '\n', icons.prompt
-  )
-  */
 
 const right = (data) =>
   combineRightSegments(
     exitCodeSegment(data.EXIT),
     pidSegment(data.PID)
   )
-
 
 /* input to posts
 
