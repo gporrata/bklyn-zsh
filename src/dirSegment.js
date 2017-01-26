@@ -28,7 +28,7 @@ const icons = {
   node: '\ue7b2',
   js: '\ue74e',
   maven: '\ue738', // maven icon unrecognizable, use java instead '\ue7c4',
-  other: '\uf07b',
+  other: '', // seems silly '\uf07b',
 }
 
 const fileTypes = {

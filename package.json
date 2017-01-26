@@ -27,7 +27,7 @@
   },
   "scripts": {
     "start": "src/start.zsh --start",
-    "build": "webpack --config src/webpack.config.babel.js",
+    "build": "NODE_ENV=production webpack --config src/webpack.config.babel.js",
     "webpack-help": "webpack --help",
     "nodemon-help": "nodemon --help",
     "postinstall": "flow-typed install"

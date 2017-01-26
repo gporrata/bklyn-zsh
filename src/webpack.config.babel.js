@@ -1,5 +1,6 @@
 import path from 'path'
 import nodeExternals from 'webpack-node-externals'
+import webpack from 'webpack'
 
 const rules = [
   // js
@@ -14,6 +15,22 @@ const rules = [
     }
   },
 ]
+
+const plugins = process.env.NODE_ENV === 'production' ? [
+  new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      screw_ie8: true,
+      warnings: false
+    },
+    mangle: {
+      screw_ie8: true
+    },
+    output: {
+      comments: false,
+      screw_ie8: true
+    }
+  })
+] : undefined
 
 export default {
   entry: {
@@ -33,6 +50,7 @@ export default {
     ],
     extensions: ['.js', '.json']
   },
+  plugins,
   devtool: 'source-map',
   target: 'node',
   externals: [nodeExternals()]

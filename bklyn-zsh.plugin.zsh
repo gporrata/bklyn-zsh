@@ -10,13 +10,13 @@ if [[ "$bklyn_zsh_debug" == "debug" ]]; then
 # otherwise its ok to not restart server
 else
   if ! lsof -n -i:${bklyn_zsh_port} | grep LISTEN >/dev/null; then
-    PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
+    NODE_ENV=production PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
   fi
 fi
 
 # if node modules missnig, install and rebuild
 if [[ ! -d node_modules ]]; then
-  yarn && yarn build
+  yarn --prod && yarn build
 fi
 
 # for padding yaml 'here doc' data

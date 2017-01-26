@@ -24,25 +24,31 @@ const separateLeftSegments = (sega, segb) =>
     seps[style][0],
   ].join('') : ''
 
-export const combineLeftSegments = (cols, ...segments) => [
-  // all segments combined
-  _(segments)
-    .filter(segment => segment.text)
-    .map((segment, index, coll) => [
-      separateLeftSegments(coll[index - 1], segment),
-      bg(segment.bg0),
-      fg(segment.fg0),
-      ' ', segment.text,
-    ].join(''))
-    .value()
-    .join(''),
-  ' ',
-  fg(segments[segments.length - 1].bg0),
-  styles.bgColor.close,
-  seps[style][0],
-  styles.bgColor.close,
-  styles.color.close,
-].join('')
+export const combineLeftSegments = (cols, ...segments) => {
+  const fsegments = _(segments).filter(segment => segment.text)
+  return [
+    // all segments combined
+    fsegments
+      .map((segment, index, coll) => [
+        separateLeftSegments(coll[index - 1], segment),
+        bg(segment.bg0),
+        fg(segment.fg0),
+        ' ', segment.text,
+      ].join(''))
+      .value()
+      .join(''),
+    ' ',
+    fg(fsegments.last().bg0),
+    styles.bgColor.close,
+    seps[style][0],
+    styles.bgColor.close,
+    styles.color.close,
+  ].join('')
+}
+
+
+
+
 
 const rightSep = (sega, segb) => [
   fg(segb.bg0), bg(sega && sega.bg0), seps[style][2], fg(segb.fg0), bg(segb.bg0)
