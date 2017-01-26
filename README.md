@@ -6,7 +6,7 @@ My own zsh theme, inspired by powerlevel9k and powerline. Requires:
 
 * zplug ( you could use other zsh plugin managers but I haven't )
 * node
-* yarn
+* yarn ( not npm, yarn is faster )
 * git
 * nerd font
 
