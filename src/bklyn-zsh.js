@@ -10,7 +10,7 @@ import body from 'koa-better-body'
 import yaml from 'js-yaml'
 import stripAnsi from 'strip-ansi'
 
-import contextSegment from './contextSegment'
+import osSegment from './osSegment'
 import sshSegment from './sshSegment'
 import dirSegment from './dirSegment'
 import exitCodeSegment from './exitCodeSegment'
@@ -23,11 +23,11 @@ const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
 
 const left = (data) =>
   combineLeftSegments(data.COLS,
-    contextSegment(data.USER, data.HOST),
-    sshSegment(data.SSH_TTY, data.SSH_CLIENT),
+    sshSegment(data.SSH_TTY, data.SSH_CLIENT, data.USER, data.HOST),
+    osSegment(),
     dirSegment(data.PWD),
     vcsSegment(data.GIT, data.GIT_STASH)
-  ) + '\n\uf489 '
+  ) + '\n\uf489  '
 
 const right = (data) =>
   combineRightSegments(

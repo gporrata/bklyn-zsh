@@ -16,23 +16,28 @@ const seps = {
 
 const style = 'curves'
 
-const leftBg0 = '#094d77'
+const separateLeftSegments = (sega, segb) =>
+  sega && segb && sega.bg0 != segb.bg0 ?
+  [
+    fg(sega.bg0),
+    bg(segb.bg0),
+    seps[style][0],
+  ].join('') : ''
 
 export const combineLeftSegments = (cols, ...segments) => [
-  //
-  bg(leftBg0),
   // all segments combined
   _(segments)
     .filter(segment => segment.text)
-    .map(segment => [
+    .map((segment, index, coll) => [
+      separateLeftSegments(coll[index - 1], segment),
+      bg(segment.bg0),
       fg(segment.fg0),
       ' ', segment.text,
     ].join(''))
     .value()
     .join(''),
-  // end of line
-  fg(leftBg0),
   ' ',
+  fg(segments[segments.length - 1].bg0),
   styles.bgColor.close,
   seps[style][0],
   styles.bgColor.close,

@@ -3,9 +3,8 @@
 import os from 'os'
 import {fg} from './segments'
 
-const bg0  = '#7490aa'
-const fg0 = '#C0392B'
-const fg1 = '#ffffff'
+const bg0 = '#094d77'
+const fg0 = '#2ECC71'
 
 const icons = {
   darwin: '\uf179',
@@ -33,9 +32,9 @@ const calcOsIcon = () => {
 
 const osIcon = calcOsIcon()
 
-export default (user /*: string */, host /*: string */) => ({
+export default () => ({
   bg0, fg0,
   text: [
-    osIcon, ' ', fg(fg1), user, '@', host
+    osIcon,
   ].join(''),
 })
