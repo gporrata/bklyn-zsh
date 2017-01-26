@@ -1,8 +1,8 @@
 import {fg} from './segments'
 
 const bg0 = '#BDC3C7'
-const fg0 = '#808589'
-const fg1 = '#3d3e3f'
+const fg0 = '#094d77'
+const fg1 = '#000000'
 
 export default (pid) => {
   if(!pid) {

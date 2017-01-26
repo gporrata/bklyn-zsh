@@ -1,20 +1,32 @@
-bklyn_zsh_port=9988
+# default bklyn_zsh_port
+if [[ "$bklyn_zsh_port" == "" ]]; then
+  bklyn_zsh_port=9988
+fi
 
-bklyn_zsh_existing_pid=`lsof -n -i:$bklyn_zsh_port | grep LISTEN | awk -F ' ' '{print $2}'`
+# always restart server in debug mode
+if [[ "$bklyn_zsh_debug" == "debug" ]]; then
+  kill -KILL `lsof -n -i:${bklyn_zsh_port} | grep LISTEN | awk -F ' ' '{print $2}'`
+  PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
+# otherwise its ok to not restart server
+else
+  if ! lsof -n -i:${bklyn_zsh_port} | grep LISTEN >/dev/null; then
+    PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
+  fi
+fi
 
-kill -KILL `lsof -n -i:${bklyn_zsh_port} | grep LISTEN | awk -F ' ' '{print $2}'`
-PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
+# if node modules missnig, install and rebuild
+if [[ ! -d node_modules ]]; then
+  yarn && yarn build
+fi
 
-#if ! lsof -n -i:${bklyn_zsh_port} | grep LISTEN >/dev/null; then
-#  PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
-#fi
-
+# for padding yaml 'here doc' data
 bklyn_zsh_yaml_pad() {
   while read line; do
     echo "  $line"
   done
 }
 
+# passes data to server
 bklyn_zsh_data() {
   cat <<EOF
 COLS: $COLUMNS
@@ -32,6 +44,7 @@ GIT_STASH: |
 EOF
 }
 
+# called prior to every command
 bklyn_zsh_precmd_hook() {
   bklyn_zsh_last_pid=$!
   bklyn_zsh_last_exit=$?

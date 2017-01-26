@@ -3,7 +3,7 @@ import {fg} from './segments'
 const fgSuccess = '#033d1a'
 const fgFailed = '#C0392B'
 const bg0 = '#ECF0F1'
-const fg0 = '#a7aeaf'
+const fg0 = '#094d77'
 const fg1 = '#000000'
 
 export default (exitCode) => {
