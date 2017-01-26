@@ -1,3 +1,6 @@
+setopt NO_HUP
+setopt NO_CHECK_JOBS
+
 # if node modules missing or package.json newer, install and rebuild
 if [[ ( ! -d "${0:A:h}/node_modules" ) || ( "${0:A:h}/package.json" -nt "${0:A:h}/node_modules" ) ]]; then
   ( cd ${0:A:h} && yarn run build )
