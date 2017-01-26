@@ -1,10 +1,18 @@
+# if node modules missing or package.json newer, install and rebuild
+if [[ ( ! -d "${0:A:h}/node_modules" ) || ( "${0:A:h}/package.json" -nt "${0:A:h}/node_modules" ) ]]; then
+  ( cd ${0:A:h} && yarn run build )
+  bklyn_zsh_rebuilt="rebuilt"
+else
+  bklyn_zsh_rebuilt=
+fi
+
 # default bklyn_zsh_port
 if [[ "$bklyn_zsh_port" == "" ]]; then
   bklyn_zsh_port=9988
 fi
 
-# always restart server in debug mode
-if [[ "$bklyn_zsh_debug" == "debug" ]]; then
+# always restart server in debug mode or if server rebuilt
+if [[ "$bklyn_zsh_debug" == "debug" || "$bklyn_zsh_rebuilt" == "rebuilt" ]]; then
   kill -KILL `lsof -n -i:${bklyn_zsh_port} | grep LISTEN | awk -F ' ' '{print $2}'`
   PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
 # otherwise its ok to not restart server
@@ -12,11 +20,6 @@ else
   if ! lsof -n -i:${bklyn_zsh_port} | grep LISTEN >/dev/null; then
     NODE_ENV=production PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
   fi
-fi
-
-# if node modules missnig, install and rebuild
-if [[ ! -d node_modules ]]; then
-  yarn --prod && yarn build
 fi
 
 # for padding yaml 'here doc' data

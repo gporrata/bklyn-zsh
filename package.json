@@ -30,6 +30,6 @@
     "build": "NODE_ENV=production webpack --config src/webpack.config.babel.js",
     "webpack-help": "webpack --help",
     "nodemon-help": "nodemon --help",
-    "postinstall": "flow-typed install"
+    "postinstall": "[ \"$NODE_ENV\" != production ] && flow-typed install"
   }
 }
