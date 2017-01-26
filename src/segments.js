@@ -19,21 +19,23 @@ const style = 'curves'
 const leftBg0 = '#094d77'
 
 export const combineLeftSegments = (cols, ...segments) => [
-  // set bg color for entire line
+  //
   bg(leftBg0),
   // all segments combined
   _(segments)
     .filter(segment => segment.text)
     .map(segment => [
       fg(segment.fg0),
-      segment.text, ' ',
+      ' ', segment.text,
     ].join(''))
     .value()
     .join(''),
   // end of line
   fg(leftBg0),
+  ' ',
   styles.bgColor.close,
   seps[style][0],
+  styles.bgColor.close,
   styles.color.close,
 ].join('')
 

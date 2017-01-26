@@ -25,14 +25,14 @@ const icons = {
   java: '\ue738',
   cpp: '\ue51d',
   scala: '\ue706',
-  node: '\ue719',
+  node: '\ue7b2',
   js: '\ue74e',
   maven: '\ue738', // maven icon unrecognizable, use java instead '\ue7c4',
   other: '\uf07b',
 }
 
 const fileTypes = {
-  'package.json': 'npm',
+  'package.json': 'node',
   'node_modules': 'node',
   'build.sbt': 'scala',
   'pom.xml': 'maven',

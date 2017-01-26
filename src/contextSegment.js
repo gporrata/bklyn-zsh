@@ -4,7 +4,7 @@ import os from 'os'
 import {fg} from './segments'
 
 const bg0  = '#7490aa'
-const fg0 = '#1a2d3f'
+const fg0 = '#C0392B'
 const fg1 = '#ffffff'
 
 const icons = {

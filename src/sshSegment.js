@@ -11,6 +11,6 @@ export default (tty, client) => {
     text: null
   } : {
     bg0, fg0,
-    text: `\uf1be  ${fg(fg1)}${tty} ${clientIp(client)}`
+    text: `\uf109  ${fg(fg1)}${tty} ${clientIp(client)}`
   }
 }
