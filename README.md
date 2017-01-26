@@ -9,8 +9,8 @@ My own zsh theme, inspired by powerlevel9k and powerline. Requires:
 * git
 * nerd font
 
-The screenshot above uses iTerm2, a nerd font, and solarized colors and
-a backdrop image. Bklyn-zsh will run on a server which provides the left and
+The screenshot above uses iTerm2, a nerd font, and solarized
+colors. Bklyn-zsh will run on a server which provides the left and
 right prompts. Just a few features including:
 
 * nice os icons for osx, linux (ubuntu or redhat)
