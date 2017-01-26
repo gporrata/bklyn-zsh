@@ -1,9 +1,9 @@
 # if node modules missing or package.json newer, install and rebuild
 if [[ ( ! -d "${0:A:h}/node_modules" ) || ( "${0:A:h}/package.json" -nt "${0:A:h}/node_modules" ) ]]; then
-  ( cd ${0:A:h} && yarn run build )
-  bklyn_zsh_rebuilt="rebuilt"
+  ( cd ${0:A:h} && yarn && yarn run build )
+  bklyn_zsh_rebuild="rebuild"
 else
-  bklyn_zsh_rebuilt=
+  bklyn_zsh_rebuild=
 fi
 
 # default bklyn_zsh_port
@@ -11,8 +11,8 @@ if [[ "$bklyn_zsh_port" == "" ]]; then
   bklyn_zsh_port=9988
 fi
 
-# always restart server in debug mode or if server rebuilt
-if [[ ( "$bklyn_zsh_debug" == "debug" ) || ( "$bklyn_zsh_rebuilt" == "rebuilt" ) ]]; then
+# always restart server in debug mode or if server rebuild
+if [[ ( "$bklyn_zsh_debug" == "debug" ) || ( "$bklyn_zsh_rebuild" == "rebuild" ) ]]; then
   bklyn_zsh_existing_pid=`lsof -n -i:${bklyn_zsh_port} | grep LISTEN | awk -F ' ' '{print $2}'`
   if [[ "$bklyn_zsh_existing_pid" != "" ]]; then
     kill -KILL "$bklyn_zsh_existing_pid"
