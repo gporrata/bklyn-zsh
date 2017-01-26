@@ -1,2 +1,10 @@
+flow-typed
+node_modules
+dist
+yarn.lock
+
+
 .*
 !.gitignore
+!.babelrc
+!.eslintrc
