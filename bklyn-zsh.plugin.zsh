@@ -12,13 +12,19 @@ if [[ "$bklyn_zsh_port" == "" ]]; then
 fi
 
 # always restart server in debug mode or if server rebuilt
-if [[ "$bklyn_zsh_debug" == "debug" || "$bklyn_zsh_rebuilt" == "rebuilt" ]]; then
-  kill -KILL `lsof -n -i:${bklyn_zsh_port} | grep LISTEN | awk -F ' ' '{print $2}'`
-  PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
+if [[ ( "$bklyn_zsh_debug" == "debug" ) || ( "$bklyn_zsh_rebuilt" == "rebuilt" ) ]]; then
+  bklyn_zsh_existing_pid=`lsof -n -i:${bklyn_zsh_port} | grep LISTEN | awk -F ' ' '{print $2}'`
+  if [[ "$bklyn_zsh_existing_pid" != "" ]]; then
+    kill -KILL "$bklyn_zsh_existing_pid"
+  fi
+  PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &!
+  while ! nc -z localhost "${bklyn_zsh_port}"; do
+    sleep 0.1
+  done
 # otherwise its ok to not restart server
 else
   if ! lsof -n -i:${bklyn_zsh_port} | grep LISTEN >/dev/null; then
-    NODE_ENV=production PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
+    NODE_ENV=production PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &!
   fi
 fi
 
@@ -62,3 +68,5 @@ if [[ $bklyn_zsh_installed != 'installed' ]]; then
   [[ -z $precmd_functions ]] && precmd_functions=()
   precmd_functions=($precmd_functions bklyn_zsh_precmd_hook)
 fi
+
+echo 'done'
