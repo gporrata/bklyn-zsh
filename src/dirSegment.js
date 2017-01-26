@@ -23,7 +23,7 @@ const icons = {
   npm: '\ue71e',
   docker: '\ue7b0',
   java: '\ue738',
-  cpp: '\ue51d',
+  cpp: '\ue789', // actually gnu
   scala: '\ue706',
   node: '\ue7b2',
   js: '\ue74e',
