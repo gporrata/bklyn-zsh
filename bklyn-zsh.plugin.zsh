@@ -68,5 +68,3 @@ if [[ $bklyn_zsh_installed != 'installed' ]]; then
   [[ -z $precmd_functions ]] && precmd_functions=()
   precmd_functions=($precmd_functions bklyn_zsh_precmd_hook)
 fi
-
-echo 'done'

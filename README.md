@@ -4,6 +4,7 @@
 
 My own zsh theme, inspired by powerlevel9k and powerline. Requires:
 
+* zplug ( you could use other zsh plugin managers but I haven't )
 * node
 * yarn
 * git
@@ -13,14 +14,15 @@ The screenshot above uses iTerm2, a nerd font, and solarized
 colors. Bklyn-zsh will run on a server which provides the left and
 right prompts. Just a few features including:
 
-* nice os icons for osx, linux (ubuntu or redhat)
-* nice icon for type of project language (js, scala, java, .c++)
-* current git branch / up / down / stashes / unstaged icons
-* last process failed / last pid
-* if in ssh
+* show nice os icons for osx, linux (ubuntu or redhat)
+* show nice icon for type of project language (js, scala, java, .c++)
+* show nice stats for current git branch / up / down / stashes. icon for unstaged
+* show if last process failed
+* show last pid
+* show if in ssh
 * pretty colors defined in hex (thanks to npm ansi-style)
 
 Todo:
 
-* will provide more information on the tmux line, coming soon
+* provide tmux theme from same server, coming soon
 * alternating powerline edges based on the day.
