@@ -1,6 +1,8 @@
 setopt NO_HUP
 setopt NO_CHECK_JOBS
 
+bklyn_zsh_dir=${0:A:h}
+
 # default bklyn_zsh_port
 if [[ "$bklyn_zsh_port" == "" ]]; then
   bklyn_zsh_port=9988
@@ -8,8 +10,9 @@ fi
 
 # if node modules missing or package.json newer, install and rebuild
 bklyn_zsh_rebuild() {
-  if [[ ( ! -d "${0:A:h}/node_modules" ) || ( "${0:A:h}/package.json" -nt "${0:A:h}/node_modules" ) ]]; then
-    pushd "${0:A:h}"
+  if [[ ( ! -d "${bklyn_zsh_dir}/node_modules" ) || ( "${bklyn_zsh_dir}/package.json" -nt "${bklyn_zsh_dir}/node_modules" ) ]]; then
+    pushd "${bklyn_zsh_dir}"
+    echo "Rebuilding in `pwd`"
     yarn
     yarn run build
     popd
@@ -27,10 +30,10 @@ bklyn_zsh_restart_server() {
       debug "Killing existing server on $bklyn_zsh_existing_pid"
       kill -KILL "$bklyn_zsh_existing_pid"
     fi
-    PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &|
+    PORT=${bklyn_zsh_port} node ${bklyn_zsh_dir}/dist/bklyn-zsh-bundle.js &|
   # otherwise its ok to not restart server
   elif ! lsof -n -i:${bklyn_zsh_port} | grep LISTEN >/dev/null; then
-    NODE_ENV=production PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &|
+    NODE_ENV=production PORT=${bklyn_zsh_port} node ${bklyn_zsh_dir}/dist/bklyn-zsh-bundle.js &|
   fi
   # wait for server to start
   while ! nc -z localhost "${bklyn_zsh_port}"; do
