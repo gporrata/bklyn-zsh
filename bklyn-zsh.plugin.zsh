@@ -1,26 +1,51 @@
-# if node modules missing or package.json newer, install and rebuild
-if [[ ( ! -d "${0:A:h}/node_modules" ) || ( "${0:A:h}/package.json" -nt "${0:A:h}/node_modules" ) ]]; then
-  ( cd ${0:A:h} && yarn run build )
-  bklyn_zsh_rebuilt="rebuilt"
-else
-  bklyn_zsh_rebuilt=
-fi
+setopt NO_HUP
+setopt NO_CHECK_JOBS
+
+bklyn_zsh_dir=${0:A:h}
 
 # default bklyn_zsh_port
 if [[ "$bklyn_zsh_port" == "" ]]; then
   bklyn_zsh_port=9988
 fi
 
-# always restart server in debug mode or if server rebuilt
-if [[ "$bklyn_zsh_debug" == "debug" || "$bklyn_zsh_rebuilt" == "rebuilt" ]]; then
-  kill -KILL `lsof -n -i:${bklyn_zsh_port} | grep LISTEN | awk -F ' ' '{print $2}'`
-  PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
-# otherwise its ok to not restart server
-else
-  if ! lsof -n -i:${bklyn_zsh_port} | grep LISTEN >/dev/null; then
-    NODE_ENV=production PORT=${bklyn_zsh_port} node ${0:A:h}/dist/bklyn-zsh-bundle.js &
+# if node modules missing or package.json newer, install and rebuild
+bklyn_zsh_rebuild() {
+  if [[ ( ! -d "${bklyn_zsh_dir}/node_modules" ) || ( "${bklyn_zsh_dir}/package.json" -nt "${bklyn_zsh_dir}/node_modules" ) ]]; then
+    pushd "${bklyn_zsh_dir}"
+    echo "Rebuilding in `pwd`"
+    yarn
+    yarn run build
+    popd
+    bklyn_zsh_rebuild="rebuild"
+  else
+    bklyn_zsh_rebuild=
   fi
-fi
+}
+
+bklyn_zsh_restart_server() {
+  # always restart server in debug mode or if server rebuild
+  if [[ ( "$bklyn_zsh_debug" == "debug" ) || ( "$bklyn_zsh_rebuild" == "rebuild" ) ]]; then
+    bklyn_zsh_existing_pid=`lsof -n -i:${bklyn_zsh_port} | grep LISTEN | awk -F ' ' '{print $2}'`
+    if [[ "$bklyn_zsh_existing_pid" != "" ]]; then
+      debug "Killing existing server on $bklyn_zsh_existing_pid"
+      kill -KILL "$bklyn_zsh_existing_pid"
+    fi
+    PORT=${bklyn_zsh_port} node ${bklyn_zsh_dir}/dist/bklyn-zsh-bundle.js &|
+  # otherwise its ok to not restart server
+  elif ! lsof -n -i:${bklyn_zsh_port} | grep LISTEN >/dev/null; then
+    NODE_ENV=production PORT=${bklyn_zsh_port} node ${bklyn_zsh_dir}/dist/bklyn-zsh-bundle.js &|
+  fi
+  # wait for server to start
+  while ! nc -z localhost "${bklyn_zsh_port}"; do
+    sleep 0.1
+  done
+}
+
+# build and restart
+bklyn_zsh_rebuild_and_restart() {
+  bklyn_zsh_rebuild
+  bklyn_zsh_restart_server
+}
 
 # for padding yaml 'here doc' data
 bklyn_zsh_yaml_pad() {
@@ -49,16 +74,28 @@ EOF
 
 # called prior to every command
 bklyn_zsh_precmd_hook() {
-  bklyn_zsh_last_pid=$!
-  bklyn_zsh_last_exit=$?
-  PROMPT=`bklyn_zsh_data $bklyn_zsh_last_exit $bklyn_zsh_last_pid | curl --data-binary @- -s -H"Content-Type:text/plain" http://127.0.0.1:${bklyn_zsh_port}/zsh-left`
-  RPROMPT=`bklyn_zsh_data $bklyn_zsh_last_exit $bklyn_zsh_last_pid | curl --data-binary @- -s -H"Content-Type:text/plain" http://127.0.0.1:${bklyn_zsh_port}/zsh-right`
+  bklyn_zsh_rebuild_and_restart
+
+  # override to just get prompt data
+  bklyn_zsh_precmd_hook() {
+    bklyn_zsh_last_pid=$!
+    bklyn_zsh_last_exit=$?
+    PROMPT=`bklyn_zsh_data $bklyn_zsh_last_exit $bklyn_zsh_last_pid | curl --data-binary @- -s -H"Content-Type:text/plain" http://127.0.0.1:${bklyn_zsh_port}/zsh-left`
+    RPROMPT=`bklyn_zsh_data $bklyn_zsh_last_exit $bklyn_zsh_last_pid | curl --data-binary @- -s -H"Content-Type:text/plain" http://127.0.0.1:${bklyn_zsh_port}/zsh-right`
+  }
+
+  bklyn_zsh_precmd_hook
 }
 
-# make sure to install bklyn-zsh only once
-if [[ $bklyn_zsh_installed != 'installed' ]]; then
-  bklyn_zsh_installed='installed'
+# install bklyn_zsh
+bklyn_zsh_install() {
+  # make sure to install bklyn-zsh only once
+  if [[ $bklyn_zsh_installed != 'installed' ]]; then
+    bklyn_zsh_installed='installed'
 
-  [[ -z $precmd_functions ]] && precmd_functions=()
-  precmd_functions=($precmd_functions bklyn_zsh_precmd_hook)
-fi
+    [[ -z $precmd_functions ]] && precmd_functions=()
+    precmd_functions=($precmd_functions bklyn_zsh_precmd_hook)
+  fi
+}
+
+bklyn_zsh_install

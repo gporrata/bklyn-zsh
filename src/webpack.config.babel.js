@@ -16,22 +16,6 @@ const rules = [
   },
 ]
 
-const plugins = process.env.NODE_ENV === 'production' ? [
-  new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      screw_ie8: true,
-      warnings: false
-    },
-    mangle: {
-      screw_ie8: true
-    },
-    output: {
-      comments: false,
-      screw_ie8: true
-    }
-  })
-] : undefined
-
 export default {
   entry: {
     script: path.resolve(__dirname, './bklyn-zsh')
@@ -50,7 +34,6 @@ export default {
     ],
     extensions: ['.js', '.json']
   },
-  plugins,
   devtool: 'source-map',
   target: 'node',
   externals: [nodeExternals()]
