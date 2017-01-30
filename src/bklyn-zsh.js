@@ -19,7 +19,7 @@ import vcsSegment from './vcsSegment'
 import {ansiZshProtect} from './ansiStringManipulation'
 import {combineLeftSegments, combineRightSegments} from './segments'
 
-const serverPort = parseInt(_.defaultTo(process.env.PORT, 90889))
+const serverPath = _.defaultTo(process.env.BKLYN_ZSH_SOCKET_PATH, 90889)
 
 const left = (data) =>
   combineLeftSegments(data.COLS,
@@ -69,6 +69,6 @@ koa()
   .use(route.post('/tmux', function *(next) {
     this.body = '...'
   }))
-  .listen(serverPort, 'localhost')
+  .listen(serverPath)
 
-console.log(`bklyn-zsh started on ${serverPort}`)
+console.log(`bklyn-zsh started on ${serverPath}`)
