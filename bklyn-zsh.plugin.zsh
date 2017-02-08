@@ -3,9 +3,9 @@ setopt NO_CHECK_JOBS
 
 bklyn_zsh_dir=${0:A:h}
 
-# default bklyn_zsh_port
-if [[ "$bklyn_zsh_port" == "" ]]; then
-  bklyn_zsh_port=9988
+# default BKLYN_ZSH_SOCKET_PATH
+if [[ "$BKLYN_ZSH_SOCKET_PATH" == "" ]]; then
+  export BKLYN_ZSH_SOCKET_PATH=${bklyn_zsh_dir}/.bklyn_zsh_comm
 fi
 
 # if node modules missing or package.json newer, install and rebuild
@@ -25,18 +25,15 @@ bklyn_zsh_rebuild() {
 bklyn_zsh_restart_server() {
   # always restart server in debug mode or if server rebuild
   if [[ ( "$bklyn_zsh_debug" == "debug" ) || ( "$bklyn_zsh_rebuild" == "rebuild" ) ]]; then
-    bklyn_zsh_existing_pid=`lsof -n -i:${bklyn_zsh_port} | grep LISTEN | awk -F ' ' '{print $2}'`
-    if [[ "$bklyn_zsh_existing_pid" != "" ]]; then
-      debug "Killing existing server on $bklyn_zsh_existing_pid"
-      kill -KILL "$bklyn_zsh_existing_pid"
-    fi
-    PORT=${bklyn_zsh_port} node ${bklyn_zsh_dir}/dist/bklyn-zsh-bundle.js &|
+    rm -f "${BKLYN_ZSH_SOCKET_PATH}"
+    node ${bklyn_zsh_dir}/dist/bklyn-zsh-bundle.js &|
   # otherwise its ok to not restart server
-  elif ! lsof -n -i:${bklyn_zsh_port} | grep LISTEN >/dev/null; then
-    NODE_ENV=production PORT=${bklyn_zsh_port} node ${bklyn_zsh_dir}/dist/bklyn-zsh-bundle.js &|
+  elif [[ ! -e "${BKLYN_ZSH_SOCKET_PATH}" ]] || (( `ps ax | grep -c "${bklyn_zsh_dir}/dist/bklyn-zsh-bundle.js"` <= 1 )); then
+    rm -f "${BKLYN_ZSH_SOCKET_PATH}"
+    NODE_ENV=production node ${bklyn_zsh_dir}/dist/bklyn-zsh-bundle.js &|
   fi
   # wait for server to start
-  while ! nc -z localhost "${bklyn_zsh_port}"; do
+  while ! echo '' | nc -vU "${BKLYN_ZSH_SOCKET_PATH}"; do
     sleep 0.1
   done
 }
@@ -80,8 +77,8 @@ bklyn_zsh_precmd_hook() {
   bklyn_zsh_precmd_hook() {
     bklyn_zsh_last_pid=$!
     bklyn_zsh_last_exit=$?
-    PROMPT=`bklyn_zsh_data $bklyn_zsh_last_exit $bklyn_zsh_last_pid | curl --data-binary @- -s -H"Content-Type:text/plain" http://127.0.0.1:${bklyn_zsh_port}/zsh-left`
-    RPROMPT=`bklyn_zsh_data $bklyn_zsh_last_exit $bklyn_zsh_last_pid | curl --data-binary @- -s -H"Content-Type:text/plain" http://127.0.0.1:${bklyn_zsh_port}/zsh-right`
+    PROMPT=`bklyn_zsh_data $bklyn_zsh_last_exit $bklyn_zsh_last_pid | curl --data-binary @- -s -H"Content-Type:text/plain" --unix-socket ${BKLYN_ZSH_SOCKET_PATH} http://localhost/zsh-left`
+    RPROMPT=`bklyn_zsh_data $bklyn_zsh_last_exit $bklyn_zsh_last_pid | curl --data-binary @- -s -H"Content-Type:text/plain" --unix-socket ${BKLYN_ZSH_SOCKET_PATH} http://localhost/zsh-right`
   }
 
   bklyn_zsh_precmd_hook
