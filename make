@@ -14,15 +14,20 @@
 # etc... etc...
 
 case "$1" in
-  build|run)
+  run)
     clear
-    cargo build 2>&1 >&- --color=always --verbose | less 
-    if [[ ${pipestatus[1]} == "0" && "$1" == "run" ]]; then
+    cargo build 2>&1 >&- --color=always
+    if [[ $! == "0" ]]; then
       shift
-      RUST_BACKTRACE=1 "$@"
+      echo "$@"
+      RUST_BACKTRACE=1 OSTYPE=$OSTYPE "$@"
     else
       echo "Unable to run??"
     fi
+    ;;
+  build)
+    clear
+    cargo build 2>&1 >&- --color=always --verbose | less 
     ;;
   test)
     clear
