@@ -16,13 +16,17 @@
 case "$1" in
   build|run)
     clear
-    cargo build 2>&1 >&- --color=always | less 
+    cargo build 2>&1 >&- --color=always --verbose | less 
     if [[ ${pipestatus[1]} == "0" && "$1" == "run" ]]; then
       shift
       RUST_BACKTRACE=1 "$@"
     else
       echo "Unable to run??"
     fi
+    ;;
+  test)
+    clear
+    cargo test --color=always 2>&1 >&-| less
     ;;
   watch)
     shift

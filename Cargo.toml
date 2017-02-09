@@ -5,5 +5,7 @@ authors = ["George Porrata <gporrata@gmail.com>"]
 
 [dependencies]
 getopts = "0.2"
+futures = "0.1"
+regex = "0.2"
 
 

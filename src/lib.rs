@@ -1,6 +1,5 @@
+pub mod zsh;
+pub mod segments;
+
 #[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-    }
-}
+mod tests;

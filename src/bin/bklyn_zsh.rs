@@ -1,19 +1,13 @@
 extern crate getopts;
+extern crate bklyn_zsh;
 
 use std::env;
 use getopts::Options;
+use bklyn_zsh::zsh;
 
 fn help(opts: Options, program: &str) {
   let brief = format!("Usage: {} FILE [options]", program);
   print!("{}", opts.usage(&brief));
-}
-
-fn zsh_left() {
-  unimplemented!();    
-}
-
-fn zsh_right() {
-  unimplemented!();
 }
 
 pub fn main() {
@@ -36,8 +30,8 @@ pub fn main() {
   }
   // get prompt 
   match matches.opt_str("p") {
-    Some(ref prompt) if prompt == "zsh-left" => zsh_left(),
-    Some(ref prompt) if prompt == "zsh-right" => zsh_right(),
+    Some(ref prompt) if prompt == "zsh-left" => zsh::left(matches.free),
+    Some(ref prompt) if prompt == "zsh-right" => zsh::right(matches.free),
     Some(ref prompt) => panic!("Unknown prompt {}", prompt),
     None => {}
   }
