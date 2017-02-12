@@ -6,8 +6,9 @@ use std::vec::Vec;
 use segments::*;
 use self::futures::future::*;
 
-const fg_clear: &'static str = "\u{1b}[38m";
-const bg_clear: &'static str = "\u{1b}[48m";
+const all_reset: &'static str = "\u{1b}[0m";
+const fg_reset: &'static str = "\u{1b}[39m"; // or is it 38?
+const bg_reset: &'static str = "\u{1b}[49m"; //  or is it 48?
 
 // set foreground color
 // TODO: cache values
@@ -36,23 +37,21 @@ fn left_fold(texts: Vec<Vec<Part>>) -> String {
         Part::Text(string) => result.push_str(&string),
         Part::Fg(color) => result.push_str(&fg(color)), 
         Part::Bg(color) => result.push_str(&bg(color)), 
-        Part::FgClear{} => result.push_str(fg_clear), 
-        Part::BgClear{} => result.push_str(bg_clear) 
+        Part::FgReset{} => result.push_str(fg_reset), 
+        Part::BgReset{} => result.push_str(bg_reset) 
       };
     }
   };
+  result.push_str(all_reset);
   result
 }
 
 // generate zsh left prompt
 pub fn left(segments: Vec<String>) { 
-  let env = Environment {
-    env: environment()
-  };
   let futs: Vec<BoxFuture<Vec<Part>, ()>> = segments.iter()
     .map(|string| string.as_str())
     .flat_map(|str| segment_of(str))
-    .map(|segment| segment.text(&env))
+    .map(|segment| segment.text())
     .collect();
   let fut = join_all(futs)
     .then(|result| {
@@ -70,6 +69,7 @@ pub fn left(segments: Vec<String>) {
 }
 
 // generate zsh right prompt
+#[allow(unused_variables)]
 pub fn right(segments: Vec<String>) {
   unimplemented!();
 }
