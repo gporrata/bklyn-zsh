@@ -29,8 +29,10 @@ fn bg(color: u32) -> String {
   format!("\u{1b}[48;2;{};{};{}m", r, g, b) 
 }
 
+type SepCodes = [[&'static str; 4]; 4];
+
 // seps
-fn sep_codes() -> [[&'static str; 4]; 4] {
+fn sep_codes() -> SepCodes {
   [
     // angles
     ["\u{e0b0}", "\u{e0b1}", "\u{e0b2}", "\u{e0b3}"],
@@ -43,21 +45,37 @@ fn sep_codes() -> [[&'static str; 4]; 4] {
   ]
 }
 
-fn left_sep(result: &mut String, seps: [[&'static str; 4]; 4], lastBg: u32, currBg: u32) {
-  if currBg == lastBg {
-    //result.push_str(seps[1][1]);
-  }
-  else {
-    result.push_str(&fg(lastBg));
-    result.push_str(&bg(currBg));
-    result.push_str(seps[1][0]);
-    result.push_str(" ");
+// adds left separator
+fn left_sep(result: &mut String, seps: SepCodes, hasLast: bool, lastBg: u32, currBg: u32) {
+  if hasLast {
+    if currBg == lastBg {
+      //result.push_str(seps[1][1]);
+    }
+    else {
+      result.push_str(&fg(lastBg));
+      result.push_str(&bg(currBg));
+      result.push_str(seps[1][0]);
+      result.push_str(" ");
+    }
   }
 }
 
+// adds right separator
+fn right_sep(result: &mut String, seps: SepCodes, hasLast: bool, lastBg: u32, currBg: u32) {
+  if hasLast {
+    result.push_str(&bg(lastBg));
+  }
+  result.push_str(&fg(currBg));
+  result.push_str(seps[1][2]);
+}
+
 // combine texts for left prompt
-fn left_fold(texts: Vec<Vec<Part>>) -> String {
-  let seps = sep_codes();
+fn parts_fold<F1, F2>(
+  texts: Vec<Vec<Part>>, prefix: F1, terminator: F2) -> String 
+where
+  F1: Fn(&mut String, bool, u32, u32),
+  F2: FnOnce(&mut String, bool, u32)
+{
   let mut result = String::with_capacity(1000);
   let mut hasLast = false;
   let mut lastBg = 0;
@@ -66,10 +84,7 @@ fn left_fold(texts: Vec<Vec<Part>>) -> String {
       Some(&Part::Bg(bg)) => bg,
       _ => panic!["Segment without bg??"]
     };
-    if hasLast {
-      left_sep(&mut result, seps, lastBg, currBg);
-    }
-    // is there a separater here
+    prefix(&mut result, hasLast, lastBg, currBg);
     for part in text {
       match part {
         Part::Text(string) => result.push_str(&string),
@@ -83,23 +98,32 @@ fn left_fold(texts: Vec<Vec<Part>>) -> String {
     hasLast = true;
     lastBg = currBg;
   };
-  left_sep(&mut result, seps, lastBg, 0);
-  result.push_str(all_reset);
+  terminator(&mut result, hasLast, lastBg);
   result
 }
 
+type SegmentsIter = Vec<BoxFuture<Vec<Part>, ()>>;
+
 // generate zsh left prompt
 pub fn left(segments: Vec<String>) { 
-  let futs: Vec<BoxFuture<Vec<Part>, ()>> = segments.iter()
+  let futs: SegmentsIter = segments.iter()
     .map(|string| string.as_str())
     .flat_map(|str| segment_of(str))
     .collect();
+  let seps = sep_codes();
   let fut = join_all(futs)
-    .then(|result| {
-      match result {
+    .then(|futResult| {
+      match futResult {
         Ok(texts) => {
-          let string = left_fold(texts);
-          print!("{}", string.as_str());
+          let string = parts_fold(texts, 
+            |mut stringBuf, hasLast, lastBg, currBg| 
+              left_sep(&mut stringBuf, seps, hasLast, lastBg, currBg),
+            |mut stringBuf, _, lastBg| {
+              left_sep(&mut stringBuf, seps, true, lastBg, 0);
+              stringBuf.push_str(all_reset);
+              stringBuf.push_str("\n\u{f489}  ");
+            });
+          println!("{}", string.as_str());
           Ok(string)
         },
         Err(e) => Err(e)
@@ -112,7 +136,28 @@ pub fn left(segments: Vec<String>) {
 // generate zsh right prompt
 #[allow(unused_variables)]
 pub fn right(segments: Vec<String>) {
-  unimplemented!();
+  let futs: SegmentsIter = segments.iter()
+    .flat_map(|segment| segment_of(segment))
+    .collect();
+  let seps = sep_codes();
+  let fut = join_all(futs)
+    .then(|futResult| {
+      match futResult {
+        Ok(texts) => {
+          let string = parts_fold(texts,
+            |mut stringBuf, hasLast, lastBg, currBg|
+              right_sep(&mut stringBuf, seps, hasLast, lastBg, currBg),
+            |mut stringBuf, hasLast, lastBg| {
+              stringBuf.push_str(all_reset);
+            });
+          print!("{}", string.as_str());
+          Ok(string)
+        },
+        Err(e) => Err(e)
+      }
+    });
+  let _ = fut.wait();
+  ()
 }
 
 

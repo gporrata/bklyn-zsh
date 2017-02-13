@@ -11,7 +11,7 @@ use std::env;
 
 const bg0: u32 = 0x094d77;
 const fg0: u32 = 0x33a4ea;
-const fg1: u32 = 0xfffff;
+const fg1: u32 = 0xffffff;
 
 type StaticDataMap = HashMap<&'static str, &'static str>; 
 

@@ -19,7 +19,8 @@ case "$1" in
     cargo build 2>&1 >&- --color=always
     if [[ $! == "0" ]]; then
       shift
-      time (RUST_BACKTRACE=1 OSTYPE=$OSTYPE "$@" ; echo)
+      #time (RUST_BACKTRACE=1 OSTYPE=$OSTYPE "$@" ; echo)
+      time "$@" ; echo
     else
       echo "Unable to run??"
     fi
