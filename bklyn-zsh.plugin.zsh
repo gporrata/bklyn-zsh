@@ -13,10 +13,9 @@ fi
 
 # called prior to every command
 bklyn_zsh_precmd_hook() {
-  bklyn_zsh_pid=$!
-  bklyn_zsh_exit_code=$?
+  bklyn_zsh_exit_code=$? bklyn_zsh_pid=$$
   PROMPT=`OSTYPE=$OSTYPE bklyn_zsh -p zsh-left os dir git`
-  RPROMPT=`bklyn_zsh_pid=$bklyn_zsh_pid bklyn_zsh_exit_code=$bklyn_zsh_exit_code bklyn_zsh -p zsh-right status pid`
+  RPROMPT=`bklyn_zsh_pid=$bklyn_zsh_pid bklyn_zsh_exit_code=$bklyn_zsh_exit_code bklyn_zsh -p zsh-right exit pid`
 }
 
 # install bklyn_zsh

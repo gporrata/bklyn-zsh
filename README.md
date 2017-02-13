@@ -16,7 +16,7 @@ colors. ust a few features including:
 * show nice icon for type of project language (js, scala, java, .c++, rust)
 * show nice stats for current git branch / up / down / stashes. icon for unstaged
 * show if last process failed
-* show last pid
+* show pid of zsh shell
 * pretty colors defined in hex
 
 Todo:

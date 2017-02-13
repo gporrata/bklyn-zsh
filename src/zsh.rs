@@ -1,11 +1,9 @@
 #![allow(non_upper_case_globals)]
 #![allow(non_snake_case)]
-
-extern crate futures;
+#![allow(unused_variables)]
 
 use std::vec::Vec;
 use segments::*;
-use self::futures::future::*;
 
 const all_reset: &'static str = "%{\u{1b}[0m%}";
 const fg_reset: &'static str = "%{\u{1b}[39m%}"; // or is it 38?
@@ -103,62 +101,36 @@ where
   result
 }
 
-type SegmentsIter = Vec<BoxFuture<Vec<Part>, ()>>;
-
 // generate zsh left prompt
 pub fn left(segments: Vec<String>) { 
-  let futs: SegmentsIter = segments.iter()
-    .map(|string| string.as_str())
-    .flat_map(|str| segment_of(str))
-    .collect();
   let seps = sep_codes();
-  let fut = join_all(futs)
-    .then(|futResult| {
-      match futResult {
-        Ok(texts) => {
-          let string = parts_fold(texts, 
-            |mut stringBuf, hasLast, lastBg, currBg| 
-              left_sep(&mut stringBuf, seps, hasLast, lastBg, currBg),
-            |mut stringBuf, _, lastBg| {
-              left_sep(&mut stringBuf, seps, true, lastBg, 0);
-              stringBuf.push_str(all_reset);
-              stringBuf.push_str("\n\u{f489}  ");
-            });
-          println!("{}", string.as_str());
-          Ok(string)
-        },
-        Err(e) => Err(e)
-      }
+  let texts = segments.iter()
+    .flat_map(|segment| segment_of(segment))
+    .collect();
+  let string = parts_fold(texts, 
+    |mut stringBuf, hasLast, lastBg, currBg| 
+      left_sep(&mut stringBuf, seps, hasLast, lastBg, currBg),
+    |mut stringBuf, hasLast, lastBg| {
+      left_sep(&mut stringBuf, seps, true, lastBg, 0);
+      stringBuf.push_str(all_reset);
+      stringBuf.push_str("\n\u{f489}  ");
     });
-  let _ = fut.wait();
-  ()
+  println!("{}", string.as_str());
 }
 
 // generate zsh right prompt
-#[allow(unused_variables)]
 pub fn right(segments: Vec<String>) {
-  let futs: SegmentsIter = segments.iter()
+  let seps = sep_codes();
+  let texts = segments.iter()
     .flat_map(|segment| segment_of(segment))
     .collect();
-  let seps = sep_codes();
-  let fut = join_all(futs)
-    .then(|futResult| {
-      match futResult {
-        Ok(texts) => {
-          let string = parts_fold(texts,
-            |mut stringBuf, hasLast, lastBg, currBg|
-              right_sep(&mut stringBuf, seps, hasLast, lastBg, currBg),
-            |mut stringBuf, hasLast, lastBg| {
-              stringBuf.push_str(all_reset);
-            });
-          print!("{}", string.as_str());
-          Ok(string)
-        },
-        Err(e) => Err(e)
-      }
+  let string = parts_fold(texts,
+    |mut stringBuf, hasLast, lastBg, currBg|
+      right_sep(&mut stringBuf, seps, hasLast, lastBg, currBg),
+    |mut stringBuf, hasLast, lastBg| {
+      stringBuf.push_str(all_reset);
     });
-  let _ = fut.wait();
-  ()
+  print!("{}", string.as_str());
 }
 
 

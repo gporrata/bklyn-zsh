@@ -1,11 +1,7 @@
 #![allow(non_upper_case_globals)]
 
-extern crate futures;
-
 use std::collections::HashMap;
 use ::segments::*;
-use ::segments::Segment;
-use self::futures::future::*;
 use std::path::Path;
 use std::env;
 
@@ -88,20 +84,17 @@ fn build_dir_segment(icon: String, dir: String) -> Vec<Part> {
   ]
 }
 
-pub fn segment() -> Segment {
-  lazy(move || {
-    let _pwd = env::var("PWD").expect("Missing PWD");
-    let pwd = Path::new(&_pwd);
-    let _home = env::var("HOME").expect("Missing HOME");
-    let home = Path::new(&_home);
-    let langMarkers = lang_markers();
-    let lang = find_lang(pwd, home, true, &langMarkers);
-    let langIcons = lang_icons();
-    let icon = find_icon(&lang, &langIcons);
-    let segment = build_dir_segment(icon, pwd.to_string_lossy().into_owned());
-    ok::<Vec<Part>, ()>(segment)
-  })
-  .boxed()
+pub fn segment() -> Option<Vec<Part>> {
+  let _pwd = env::var("PWD").expect("Missing PWD");
+  let pwd = Path::new(&_pwd);
+  let _home = env::var("HOME").expect("Missing HOME");
+  let home = Path::new(&_home);
+  let langMarkers = lang_markers();
+  let lang = find_lang(pwd, home, true, &langMarkers);
+  let langIcons = lang_icons();
+  let icon = find_icon(&lang, &langIcons);
+  Some(build_dir_segment(icon, pwd.to_string_lossy().into_owned()))
+
 }
 
 // for docker use e7b0

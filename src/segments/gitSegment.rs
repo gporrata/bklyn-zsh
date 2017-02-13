@@ -24,12 +24,9 @@
 ? => untracked file (will be considered to be unstaged change)
 */
 
-extern crate futures;
 extern crate regex;
 
 use ::segments::*;
-use ::segments::Segment;
-use self::futures::future::*;
 use std::process::Command;
 use self::regex::*;
 
@@ -57,12 +54,20 @@ struct GitResult {
 }
 
 fn git() -> Option<GitResult> {
-  match Command::new("git" )
+  Command::new("git" )
     .args(&["-c","color.status=false","status","--porcelain=2","--branch"])
     .output() 
-  {
-    Result::Ok(output) => {
-      let out = String::from_utf8(output.stdout).expect("Non-utf8 output from git??");
+    .ok()
+    .and_then(|output| {
+      if output.status.success() {
+        let out = String::from_utf8(output.stdout).expect("Non-utf8 output from git??");
+        Some(out)
+      }
+      else {
+        None
+      }
+    })
+    .map(|out| {
       // find branch name
       let branchRex = RegexBuilder::new(r"^# branch.head (.+)$")
         .multi_line(true).build().unwrap();
@@ -92,16 +97,14 @@ fn git() -> Option<GitResult> {
           staged = true;
         }
       };
-      Some(GitResult {
+      GitResult {
         branch: String::from(branch),
         ahead: ahead,
         behind: behind,
         staged: staged,
         unstaged: unstaged
-      })
-    },
-    Result::Err(_) => None
-  }
+      } 
+    })
 }
 
 fn git_stashes() -> usize {
@@ -117,51 +120,44 @@ fn git_stashes() -> usize {
   }
 }
 
-pub fn segment() -> Segment {
-  lazy(|| {
-    let result = match git() {
-      Some(gitr) => {
-        let stashes = git_stashes();
-        let mut result = Vec::with_capacity(100);
-        result.push(Part::Bg(bg0));
-        result.push(Part::Fg(fg0));
-        result.push(Part::Text(format!["{}  {} ", githubIcon, branchIcon]));
-        if gitr.unstaged {
-          result.push(Part::Fg(fgUnstaged));
-          result.push(Part::Text(format!["{} ", unstagedIcon]));
-        }
-        else if gitr.staged {
-          result.push(Part::Fg(fgStaged));
-          result.push(Part::Text(format!["{} ", stagedIcon]));
-        }
-        result.push(Part::Fg(fg1));
-        result.push(Part::Text(gitr.branch));
-        result.push(Part::Fg(fg0));
-        if gitr.ahead > 0 {
-          result.push(Part::Text(format![" {} ", upIcon]));
-          result.push(Part::Fg(fg1));
-          result.push(Part::Text(gitr.ahead.to_string()));
-          result.push(Part::Fg(fg0));
-        }
-        if gitr.behind > 0 {
-          result.push(Part::Text(format![" {} ", downIcon]));
-          result.push(Part::Fg(fg1));
-          result.push(Part::Text(gitr.behind.to_string()));
-          result.push(Part::Fg(fg0));
-        }
-        if stashes > 0 {
-          result.push(Part::Text(format![" {} ", stashesIcon]));
-          result.push(Part::Fg(fg1));
-          result.push(Part::Text(stashes.to_string()));
-          result.push(Part::Fg(fg0));
-        }
-        result
-      },
-      None => vec![] 
-    };
-    ok::<Vec<Part>, ()>(result)
+pub fn segment() -> Option<Vec<Part>> {
+  git().map(|gitr|{
+    let stashes = git_stashes();
+    let mut result = Vec::with_capacity(100);
+    result.push(Part::Bg(bg0));
+    result.push(Part::Fg(fg0));
+    result.push(Part::Text(format!["{}  {} ", githubIcon, branchIcon]));
+    if gitr.unstaged {
+      result.push(Part::Fg(fgUnstaged));
+      result.push(Part::Text(format!["{} ", unstagedIcon]));
+    }
+    else if gitr.staged {
+      result.push(Part::Fg(fgStaged));
+      result.push(Part::Text(format!["{} ", stagedIcon]));
+    }
+    result.push(Part::Fg(fg1));
+    result.push(Part::Text(gitr.branch));
+    result.push(Part::Fg(fg0));
+    if gitr.ahead > 0 {
+      result.push(Part::Text(format![" {} ", upIcon]));
+      result.push(Part::Fg(fg1));
+      result.push(Part::Text(gitr.ahead.to_string()));
+      result.push(Part::Fg(fg0));
+    }
+    if gitr.behind > 0 {
+      result.push(Part::Text(format![" {} ", downIcon]));
+      result.push(Part::Fg(fg1));
+      result.push(Part::Text(gitr.behind.to_string()));
+      result.push(Part::Fg(fg0));
+    }
+    if stashes > 0 {
+      result.push(Part::Text(format![" {} ", stashesIcon]));
+      result.push(Part::Fg(fg1));
+      result.push(Part::Text(stashes.to_string()));
+      result.push(Part::Fg(fg0));
+    }
+    result
   })
-  .boxed()
 }
 
 
