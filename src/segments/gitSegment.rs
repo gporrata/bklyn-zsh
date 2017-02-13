@@ -60,8 +60,7 @@ fn git() -> Option<GitResult> {
     .ok()
     .and_then(|output| {
       if output.status.success() {
-        let out = String::from_utf8(output.stdout).expect("Non-utf8 output from git??");
-        Some(out)
+        String::from_utf8(output.stdout).ok()
       }
       else {
         None
@@ -108,16 +107,20 @@ fn git() -> Option<GitResult> {
 }
 
 fn git_stashes() -> usize {
-  match Command::new("git")
+  Command::new("git")
     .args(&["stash","list"])
     .output()
-  {
-    Result::Ok(output) => {
-      let out = String::from_utf8(output.stdout).expect("Non-utf8 output from git??"); 
-      out.split("\n").count()
-    },
-    Result::Err(_) => 0 
-  }
+    .ok()
+    .and_then(|output| {
+      if output.status.success() {
+        String::from_utf8(output.stdout).ok()
+      }
+      else {
+        None
+      }
+    })
+    .map(|out| out.split("\n").count()-1)
+    .unwrap_or(0)
 }
 
 pub fn segment() -> Option<Vec<Part>> {
