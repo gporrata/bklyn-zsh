@@ -1,3 +1,4 @@
 target
+bklyn_zsh
 .*
 !.gitignore

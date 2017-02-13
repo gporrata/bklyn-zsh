@@ -7,9 +7,10 @@ use std::vec::Vec;
 use segments::*;
 use self::futures::future::*;
 
-const all_reset: &'static str = "\u{1b}[0m";
-const fg_reset: &'static str = "\u{1b}[39m"; // or is it 38?
-const bg_reset: &'static str = "\u{1b}[49m"; //  or is it 48?
+const all_reset: &'static str = "%{\u{1b}[0m%}";
+const fg_reset: &'static str = "%{\u{1b}[39m%}"; // or is it 38?
+const bg_reset: &'static str = "%{\u{1b}[49m%}"; //  or is it 48?
+
 
 // set foreground color
 // TODO: cache values
@@ -17,7 +18,7 @@ fn fg(color: u32) -> String {
   let b = color & 0xff;
   let g = (color >> 8) & 0xff;
   let r = (color >> 16) & 0xff;
-  format!("\u{1b}[38;2;{};{};{}m", r, g, b) 
+  format!("{}\u{1b}[38;2;{};{};{}m{}", "%{", r, g, b, "%}") 
 }
 
 // set background color
@@ -26,7 +27,7 @@ fn bg(color: u32) -> String {
   let b = color & 0xff;
   let g = (color >> 8) & 0xff;
   let r = (color >> 16) & 0xff;
-  format!("\u{1b}[48;2;{};{};{}m", r, g, b) 
+  format!("{}\u{1b}[48;2;{};{};{}m{}", "%{", r, g, b, "%}") 
 }
 
 type SepCodes = [[&'static str; 4]; 4];

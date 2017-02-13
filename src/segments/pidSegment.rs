@@ -12,7 +12,7 @@ const fg0: u32 = 0x094d77;
 const fg1: u32 = 0x000000;
 
 pub fn segment() -> Segment {
-  let pid = env::var("bklyn_zsh_PID").expect("Missing bklyn_zsh_PID");
+  let pid = env::var("bklyn_zsh_pid").expect("Missing bklyn_zsh_pid");
   let result = vec![
     Part::Bg(bg0),
     Part::Fg(fg0),

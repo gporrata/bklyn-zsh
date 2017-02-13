@@ -14,7 +14,7 @@ const bg0: u32 = 0xECF0F1;
 const fg0: u32 = 0x000000;
 
 pub fn segment() -> Segment {
-  let exitCode = env::var("bklyn_zsh_EXIT").expect("Missing bklyn_zsh_EXIT")
+  let exitCode = env::var("bklyn_zsh_exit_code").expect("Missing bklyn_zsh_exit_code")
     .parse::<u16>().unwrap_or(0);
   let result = 
     if exitCode == 0 {
