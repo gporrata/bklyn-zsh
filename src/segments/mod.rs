@@ -4,18 +4,13 @@ extern crate futures;
 
 mod osSegment;
 mod dirSegment;
+mod gitSegment;
 
 use std::vec::Vec;
 
 use self::futures::future::{BoxFuture};
 
-pub fn segment_of(name: &str) -> Option<Box<Segment>> {
-  match name {
-    "os" => Some(Box::new(osSegment::OsSegment::new())),
-    "dir" => Some(Box::new(dirSegment::DirSegment::new())),
-    _ => None
-  }
-}
+type Segment = BoxFuture<Vec<Part>, ()>;
 
 // part of segment that will be rendered
 pub enum Part {
@@ -23,11 +18,16 @@ pub enum Part {
   Fg(u32), // color code
   Bg(u32), // color code
   FgReset {},
-  BgReset {}
+  BgReset {},
+  Ignore {}
 }
 
-// get segment data
-pub trait Segment {
-  // eval text to render, resolved or not, we must have something
-  fn text(&self) -> BoxFuture<Vec<Part>, ()>;
+pub fn segment_of(name: &str) -> Option<Segment> {
+  match name {
+    "os" => Some(osSegment::segment()),
+    "dir" => Some(dirSegment::segment()),
+    "git" => Some(gitSegment::segment()),
+    _ => None
+  }
 }
+

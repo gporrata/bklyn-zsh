@@ -38,7 +38,8 @@ fn left_fold(texts: Vec<Vec<Part>>) -> String {
         Part::Fg(color) => result.push_str(&fg(color)), 
         Part::Bg(color) => result.push_str(&bg(color)), 
         Part::FgReset{} => result.push_str(fg_reset), 
-        Part::BgReset{} => result.push_str(bg_reset) 
+        Part::BgReset{} => result.push_str(bg_reset),
+        Part::Ignore{} => {}
       };
     }
   };
@@ -51,7 +52,6 @@ pub fn left(segments: Vec<String>) {
   let futs: Vec<BoxFuture<Vec<Part>, ()>> = segments.iter()
     .map(|string| string.as_str())
     .flat_map(|str| segment_of(str))
-    .map(|segment| segment.text())
     .collect();
   let fut = join_all(futs)
     .then(|result| {
