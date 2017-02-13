@@ -5,6 +5,7 @@ extern crate futures;
 mod osSegment;
 mod dirSegment;
 mod gitSegment;
+mod exitCodeSegment;
 mod pidSegment;
 
 use std::vec::Vec;
@@ -28,6 +29,7 @@ pub fn segment_of(name: &str) -> Option<Segment> {
     "os" => Some(osSegment::segment()),
     "dir" => Some(dirSegment::segment()),
     "git" => Some(gitSegment::segment()),
+    "exit" => Some(exitCodeSegment::segment()),
     "pid" => Some(pidSegment::segment()),
     _ => None
   }
