@@ -1,4 +1,5 @@
 #![allow(non_upper_case_globals)]
+#![allow(non_snake_case)]
 
 extern crate futures;
 
@@ -28,21 +29,61 @@ fn bg(color: u32) -> String {
   format!("\u{1b}[48;2;{};{};{}m", r, g, b) 
 }
 
+// seps
+fn sep_codes() -> [[&'static str; 4]; 4] {
+  [
+    // angles
+    ["\u{e0b0}", "\u{e0b1}", "\u{e0b2}", "\u{e0b3}"],
+    // curves
+    ["\u{e0b4}", "\u{e0b5}", "\u{e0b6}", "\u{e0b7}"],
+    // flames
+    ["\u{e0c0}", "\u{e0c1}", "\u{e0c2}", "\u{e0c3}"],
+    // digital
+    ["\u{e0c4}", "\u{e0c5}", "\u{e0c6}", "\u{e0c7}"]
+  ]
+}
+
+fn left_sep(result: &mut String, seps: [[&'static str; 4]; 4], lastBg: u32, currBg: u32) {
+  if currBg == lastBg {
+    //result.push_str(seps[1][1]);
+  }
+  else {
+    result.push_str(&fg(lastBg));
+    result.push_str(&bg(currBg));
+    result.push_str(seps[1][0]);
+    result.push_str(" ");
+  }
+}
+
 // combine texts for left prompt
 fn left_fold(texts: Vec<Vec<Part>>) -> String {
+  let seps = sep_codes();
   let mut result = String::with_capacity(1000);
+  let mut hasLast = false;
+  let mut lastBg = 0;
   for text in texts {
+    let currBg = match text.first() {
+      Some(&Part::Bg(bg)) => bg,
+      _ => panic!["Segment without bg??"]
+    };
+    if hasLast {
+      left_sep(&mut result, seps, lastBg, currBg);
+    }
+    // is there a separater here
     for part in text {
       match part {
         Part::Text(string) => result.push_str(&string),
         Part::Fg(color) => result.push_str(&fg(color)), 
-        Part::Bg(color) => result.push_str(&bg(color)), 
+        Part::Bg(color) => result.push_str(&bg(color)),
         Part::FgReset{} => result.push_str(fg_reset), 
         Part::BgReset{} => result.push_str(bg_reset),
         Part::Ignore{} => {}
       };
     }
+    hasLast = true;
+    lastBg = currBg;
   };
+  left_sep(&mut result, seps, lastBg, 0);
   result.push_str(all_reset);
   result
 }

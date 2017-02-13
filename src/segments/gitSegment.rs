@@ -125,7 +125,7 @@ pub fn segment() -> Segment {
     let result = match git() {
       Some(gitr) => {
         let stashes = git_stashes();
-        let mut result = Vec::new();
+        let mut result = Vec::with_capacity(100);
         result.push(Part::Bg(bg0));
         result.push(Part::Fg(fg0));
         result.push(Part::Text(format!["{}  {} ", githubIcon, branchIcon]));
