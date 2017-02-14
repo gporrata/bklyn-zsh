@@ -38,8 +38,8 @@ const fgUnstaged: u32 = 0xe74c3c;
 const fgStaged: u32 = 0xe67e22;
 
 const branchIcon: &'static str = "\u{f09b} \u{f126} ";
-const upIcon: &'static str = "\u{f0aa} ";
-const downIcon: &'static str = "\u{f0ab} ";
+const upIcon: &'static str = " \u{f0aa} ";
+const downIcon: &'static str = " \u{f0ab} ";
 const stagedIcon: &'static str = "\u{f069} ";
 const unstagedIcon: &'static str = "\u{f06a} ";
 const stashesIcon: &'static str = " \u{f01c} ";
