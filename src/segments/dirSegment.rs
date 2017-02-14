@@ -65,13 +65,13 @@ fn find_icon(lang: &'static str, langIcons: &StaticDataMap) -> &'static str {
   langIcons.get(lang).unwrap_or(&"")
 }
 
-fn build_dir_segment(icon: &'static str, dir: String) -> Vec<Part> {
+fn build_dir_segment(icon: &'static str, dir: &str, home: &str) -> Vec<Part> {
   vec![
     Part::Bg(bg0), 
     Part::Fg(fg0), 
     Part::StaticText(icon), 
     Part::Fg(fg1), 
-    Part::Text(dir)
+    Part::Text(dir.replace(&home, "~"))
   ]
 }
 
@@ -84,7 +84,7 @@ pub fn segment() -> Option<Vec<Part>> {
   let lang = find_lang(pwd, home, true, &langMarkers);
   let langIcons = lang_icons();
   let icon = find_icon(&lang, &langIcons);
-  Some(build_dir_segment(icon, pwd.to_string_lossy().into_owned()))
+  Some(build_dir_segment(icon, &pwd.to_string_lossy(), &home.to_string_lossy()))
 
 }
 
