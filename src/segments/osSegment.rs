@@ -2,6 +2,7 @@
 
 use ::segments::*;
 use std::env;
+use std::process::Command;
 
 const bg0: u32 = 0x094d77;
 const fg0: u32 = 0x2ecc71;
@@ -13,13 +14,33 @@ fn wrap_icon(icon: &'static str) -> Option<Vec<Part>> {
 pub fn segment() -> Option<Vec<Part>> {
   let os = env::var("OSTYPE").expect("Missing OSTYPE!");
   if os == "linux-gnu" {
-    // TODO: determine linux distro
-    // redhat: "\u{f309}"
-    // ubuntu: "\u{fe73a}"
-    wrap_icon(" \u{f17c} ")
+    let distro = Command::new("lsb_release")
+      .args(&["-si"])
+      .output()
+      .ok()
+      .and_then(|output| {
+        if output.status.success() {
+          String::from_utf8(output.stdout).ok()
+        }
+        else {
+          None
+        }
+      })
+      .and_then(|output| {
+        if output == "Ubuntu" {
+          Some("\u{fe73a} ")
+        }
+        else if output == "Redhat" {
+          Some("\u{f309} ")
+        }
+        else {
+          None
+        }
+      })
+      .unwrap_or("\u{f17c} ");
+    wrap_icon(distro)
   }
   else if os.starts_with("darwin") {
-    // TODO: show macos version maybe?
     wrap_icon("\u{f179} ")
   }
   else if os == "cygwin" {
