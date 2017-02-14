@@ -37,13 +37,12 @@ const fg1: u32 = 0xffffff;
 const fgUnstaged: u32 = 0xe74c3c;
 const fgStaged: u32 = 0xe67e22;
 
-const githubIcon: &'static str = "\u{f113}";
-const branchIcon: &'static str = "\u{f126}";
-const upIcon: &'static str = "\u{f0aa}";
-const downIcon: &'static str = "\u{f0ab}";
-const stagedIcon: &'static str = "\u{f069}";
-const unstagedIcon: &'static str = "\u{f06a}";
-const stashesIcon: &'static str = "\u{f01c}";
+const branchIcon: &'static str = "\u{f09b} \u{f126} ";
+const upIcon: &'static str = "\u{f0aa} ";
+const downIcon: &'static str = "\u{f0ab} ";
+const stagedIcon: &'static str = "\u{f069} ";
+const unstagedIcon: &'static str = "\u{f06a} ";
+const stashesIcon: &'static str = " \u{f01c} ";
 
 struct GitResult {
   branch: String, 
@@ -129,32 +128,32 @@ pub fn segment() -> Option<Vec<Part>> {
     let mut result = Vec::with_capacity(100);
     result.push(Part::Bg(bg0));
     result.push(Part::Fg(fg0));
-    result.push(Part::Text(format!["{}  {} ", githubIcon, branchIcon]));
+    result.push(Part::StaticText(branchIcon));
     if gitr.unstaged {
       result.push(Part::Fg(fgUnstaged));
-      result.push(Part::Text(format!["{} ", unstagedIcon]));
+      result.push(Part::StaticText(unstagedIcon));
     }
     else if gitr.staged {
       result.push(Part::Fg(fgStaged));
-      result.push(Part::Text(format!["{} ", stagedIcon]));
+      result.push(Part::StaticText(stagedIcon));
     }
     result.push(Part::Fg(fg1));
     result.push(Part::Text(gitr.branch));
     result.push(Part::Fg(fg0));
     if gitr.ahead > 0 {
-      result.push(Part::Text(format![" {} ", upIcon]));
+      result.push(Part::StaticText(upIcon));
       result.push(Part::Fg(fg1));
       result.push(Part::Text(gitr.ahead.to_string()));
       result.push(Part::Fg(fg0));
     }
     if gitr.behind > 0 {
-      result.push(Part::Text(format![" {} ", downIcon]));
+      result.push(Part::StaticText(downIcon));
       result.push(Part::Fg(fg1));
       result.push(Part::Text(gitr.behind.to_string()));
       result.push(Part::Fg(fg0));
     }
     if stashes > 0 {
-      result.push(Part::Text(format![" {} ", stashesIcon]));
+      result.push(Part::StaticText(stashesIcon));
       result.push(Part::Fg(fg1));
       result.push(Part::Text(stashes.to_string()));
       result.push(Part::Fg(fg0));

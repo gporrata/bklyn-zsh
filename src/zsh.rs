@@ -87,6 +87,7 @@ where
     for part in text {
       match part {
         Part::Text(string) => result.push_str(&string),
+        Part::StaticText(string) => result.push_str(string),
         Part::Fg(color) => result.push_str(&fg(color)), 
         Part::Bg(color) => result.push_str(&bg(color)),
         Part::FgReset{} => result.push_str(fg_reset), 

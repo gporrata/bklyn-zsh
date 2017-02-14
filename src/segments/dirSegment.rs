@@ -13,16 +13,16 @@ type StaticDataMap = HashMap<&'static str, &'static str>;
 
 fn lang_icons() -> StaticDataMap {
   hashmap![
-    "home" => "\u{f015}",
-    "npm" => "\u{e71e}",
-    "docker" => "\u{e7b0}",
-    "java" => "\u{e738}",
-    "cpp" => "\u{e789}", // actually gnu
-    "rust" => "\u{f085}", // actually gears
-    "scala" => "\u{e706}",
-    "node" => "\u{e7b2}",
-    "js" => "\u{e74e}",
-    "maven" => "\u{e738}", // maven icon unrecognizable, use java instead "\ue7c4",
+    "home" => "\u{f015}  ",
+    "npm" => "\u{e71e}  ",
+    "docker" => "\u{e7b0}  ",
+    "java" => "\u{e738}  ",
+    "cpp" => "\u{e789}  ", // actually gnu
+    "rust" => "\u{f085}  ", // actually gears
+    "scala" => "\u{e706}  ",
+    "node" => "\u{e7b2}  ",
+    "js" => "\u{e74e}  ",
+    "maven" => "\u{e738}  ", // maven icon unrecognizable, use java instead "\ue7c4",
     "other" => "" // seems silly "\uf07b",
   ]
 }
@@ -39,46 +39,37 @@ fn lang_markers() -> StaticDataMap {
   ]
 }
 
-fn find_lang(dir: &Path, home: &Path, top: bool, langMarkers: &StaticDataMap) -> String {
+fn find_lang(dir: &Path, home: &Path, top: bool, langMarkers: &StaticDataMap) -> &'static str {
   if dir == home {
     if top {
-      "home".to_string() 
+      "home"
     } else {
-      "other".to_string()
+      "other"
     }
   }
   else {
     let dirBuf = dir.join("?");
-    match langMarkers
+    langMarkers
       .iter()
-      .find(|marker| {
-        dirBuf.with_file_name(marker.0).is_file()
-      }) 
-      .map(|marker| marker.1) {
-        Some(lang) => lang.to_string(),
-        None => {
-          match dir.parent() {
-            Some(parent) => find_lang(parent, home, false, &langMarkers),
-            None => "root".to_string()
-          }
-        }
-      }
+      .find(|marker| dirBuf.with_file_name(marker.0).is_file()) 
+      .map(|marker| *marker.1)
+      .unwrap_or_else(||
+        dir.parent()
+          .map(|parent| find_lang(parent, home, false, &langMarkers))
+          .unwrap_or("root")
+      )
   }
 }
 
-fn find_icon(lang: &String, langIcons: &StaticDataMap) -> String {
-  let langstr: &str = &lang;
-  match langIcons.get(langstr) {
-    Some(icon) => format!("{}  ", icon), 
-    None => "".to_string() 
-  }
+fn find_icon(lang: &'static str, langIcons: &StaticDataMap) -> &'static str {
+  langIcons.get(lang).unwrap_or(&"")
 }
 
-fn build_dir_segment(icon: String, dir: String) -> Vec<Part> {
+fn build_dir_segment(icon: &'static str, dir: String) -> Vec<Part> {
   vec![
     Part::Bg(bg0), 
     Part::Fg(fg0), 
-    Part::Text(icon), 
+    Part::StaticText(icon), 
     Part::Fg(fg1), 
     Part::Text(dir)
   ]

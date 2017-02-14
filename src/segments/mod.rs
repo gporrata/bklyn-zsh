@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 
 mod osSegment;
+mod sshSegment;
 mod dirSegment;
 mod gitSegment;
 mod exitCodeSegment;
@@ -11,6 +12,7 @@ use std::vec::Vec;
 // part of segment that will be rendered
 pub enum Part {
   Text(String),
+  StaticText(&'static str),
   Fg(u32), // color code
   Bg(u32), // color code
   FgReset {},
@@ -21,6 +23,7 @@ pub enum Part {
 pub fn segment_of(name: &str) -> Option<Vec<Part>> {
   match name {
     "os" => osSegment::segment(),
+    "ssh" => sshSegment::segment(),
     "dir" => dirSegment::segment(),
     "git" => gitSegment::segment(),
     "exit" => exitCodeSegment::segment(),
