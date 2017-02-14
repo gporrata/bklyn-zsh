@@ -29,7 +29,6 @@ pub fn segment() -> Option<Vec<Part>> {
       .and_then(|stdout| {
         let tstdout = stdout.trim();
         if tstdout == "Ubuntu" {
-          println!("Matched to ubuntu?");
           Some("\u{e73a} ")
         }
         else if tstdout == "Redhat" {
