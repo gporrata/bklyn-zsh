@@ -5,24 +5,25 @@
 My own zsh theme, inspired by powerlevel9k and powerline. Requires:
 
 * zplug ( you could use other zsh plugin managers but I haven't )
-* node
-* yarn ( not npm, yarn is faster )
+* rust + cargo
 * git
-* nerd font
+* a nerd font
 
 The screenshot above uses iTerm2, a nerd font, and solarized
-colors. Bklyn-zsh will run on a server which provides the left and
-right prompts. Just a few features including:
+colors. ust a few features including:
 
 * show nice os icons for osx, linux (ubuntu or redhat)
-* show nice icon for type of project language (js, scala, java, .c++)
+* show nice icon for type of project language (js, scala, java, .c++, rust)
 * show nice stats for current git branch / up / down / stashes. icon for unstaged
 * show if last process failed
-* show last pid
-* show if in ssh
-* pretty colors defined in hex (thanks to npm ansi-style)
+* show pid of zsh shell
+* pretty colors defined in hex
 
 Todo:
 
+* show if in ssh
+* show docker setup
+* show puppet setup
+* show version of project language (eg node ver, scala ver, java ver, gcc, rust ver, etc)
 * provide tmux theme from same server, coming soon
 * alternating powerline edges based on the day.
