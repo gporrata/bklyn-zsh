@@ -29,6 +29,10 @@ case "$1" in
     clear
     cargo build 2>&1 >&- --color=always --verbose | less 
     ;;
+  build-release)
+    clear
+    cargo build --release && cp ./target/release/bklyn_zsh .
+    ;;
   test)
     clear
     cargo test --color=always 2>&1 >&-| less

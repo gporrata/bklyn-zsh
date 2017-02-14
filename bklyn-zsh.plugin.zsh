@@ -33,7 +33,7 @@ bklyn_zsh_precmd_hook() {
   # modify hook to stop checking for bklyn_zsh bin
   bklyn_zsh_precmd_hook() {
     bklyn_zsh_exit_code=$? bklyn_zsh_pid=$$
-    PROMPT=`OSTYPE=$OSTYPE HOST=$HOST $bklyn_zsh_dir/bklyn_zsh -p zsh-left os ssh dir git`
+    PROMPT=`OSTYPE=$OSTYPE HOST=$HOST $bklyn_zsh_dir/bklyn_zsh -p zsh-left ssh os dir git`
     RPROMPT=`bklyn_zsh_pid=$bklyn_zsh_pid bklyn_zsh_exit_code=$bklyn_zsh_exit_code $bklyn_zsh_dir/bklyn_zsh -p zsh-right exit pid`
   }
 

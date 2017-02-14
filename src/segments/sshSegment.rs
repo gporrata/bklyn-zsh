@@ -4,7 +4,7 @@
 use ::segments::*;
 use std::env;
 
-const bg0: u32 = 0xd35400;
+const bg0: u32 = 0x3498DB;
 const fg0: u32 = 0xf1C40f;
 const fg1: u32 = 0xffffff;
 

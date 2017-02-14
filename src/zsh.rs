@@ -9,7 +9,6 @@ const all_reset: &'static str = "%{\u{1b}[0m%}";
 const fg_reset: &'static str = "%{\u{1b}[39m%}"; // or is it 38?
 const bg_reset: &'static str = "%{\u{1b}[49m%}"; //  or is it 48?
 
-
 // set foreground color
 // TODO: cache values
 fn fg(color: u32) -> String {
@@ -70,7 +69,7 @@ fn right_sep(result: &mut String, seps: SepCodes, hasLast: bool, lastBg: u32, cu
 
 // combine texts for left prompt
 fn parts_fold<F1, F2>(
-  texts: Vec<Vec<Part>>, prefix: F1, terminator: F2) -> String 
+  texts: Vec<Vec<Part>>, left: bool, prefixSegment: F1, postfix: F2) -> String 
 where
   F1: Fn(&mut String, bool, u32, u32),
   F2: FnOnce(&mut String, bool, u32)
@@ -83,11 +82,24 @@ where
       Some(&Part::Bg(bg)) => bg,
       _ => panic!["Segment without bg??"]
     };
-    prefix(&mut result, hasLast, lastBg, currBg);
+    prefixSegment(&mut result, hasLast, lastBg, currBg);
+    let mut firstText = true;
     for part in text {
       match part {
-        Part::Text(string) => result.push_str(&string),
-        Part::StaticText(string) => result.push_str(string),
+        Part::Text(string) => {
+          if left && !hasLast && firstText {
+            result.push_str(" ");
+            firstText = false;
+          }
+          result.push_str(&string);
+        },
+        Part::StaticText(string) => {
+          if left && !hasLast && firstText {
+            result.push_str(" ");
+            firstText = false;
+          }
+          result.push_str(string);
+        },
         Part::Fg(color) => result.push_str(&fg(color)), 
         Part::Bg(color) => result.push_str(&bg(color)),
         Part::FgReset{} => result.push_str(fg_reset), 
@@ -98,7 +110,7 @@ where
     hasLast = true;
     lastBg = currBg;
   };
-  terminator(&mut result, hasLast, lastBg);
+  postfix(&mut result, hasLast, lastBg);
   result
 }
 
@@ -108,7 +120,7 @@ pub fn left(segments: Vec<String>) {
   let texts = segments.iter()
     .flat_map(|segment| segment_of(segment))
     .collect();
-  let string = parts_fold(texts, 
+  let string = parts_fold(texts, true,
     |mut stringBuf, hasLast, lastBg, currBg| 
       left_sep(&mut stringBuf, seps, hasLast, lastBg, currBg),
     |mut stringBuf, hasLast, lastBg| {
@@ -125,7 +137,7 @@ pub fn right(segments: Vec<String>) {
   let texts = segments.iter()
     .flat_map(|segment| segment_of(segment))
     .collect();
-  let string = parts_fold(texts,
+  let string = parts_fold(texts, false,
     |mut stringBuf, hasLast, lastBg, currBg|
       right_sep(&mut stringBuf, seps, hasLast, lastBg, currBg),
     |mut stringBuf, hasLast, lastBg| {

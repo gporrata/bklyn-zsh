@@ -20,16 +20,16 @@ pub fn segment() -> Option<Vec<Part>> {
   }
   else if os.starts_with("darwin") {
     // TODO: show macos version maybe?
-    wrap_icon(" \u{f179} ")
+    wrap_icon("\u{f179} ")
   }
   else if os == "cygwin" {
-    wrap_icon(" \u{f17a} ") // TODO: eval icon here; generic win icon
+    wrap_icon("\u{f17a} ") // TODO: eval icon here; generic win icon
   }
   else if os == "msys" {
-    wrap_icon(" \u{f17a} ") // TODO: eval icon here; generic win icon
+    wrap_icon("\u{f17a} ") // TODO: eval icon here; generic win icon
   }
   else if os == "win32" {
-    wrap_icon(" \u{f17a} ") // TODO: eval icon here; generic win icon
+    wrap_icon("\u{f17a} ") // TODO: eval icon here; generic win icon
   }
   else if os.starts_with("freebsd") {
     wrap_icon("") // TODO: eval icon here
