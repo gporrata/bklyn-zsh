@@ -5,8 +5,8 @@ use ::segments::*;
 use std::env;
 
 const bg0: u32 = 0xd35400;
-const fg0: u32 = 0x094d77;
-const fg1: u32 = 0xbee3f7;
+const fg0: u32 = 0xf1C40f;
+const fg1: u32 = 0xffffff;
 
 pub fn segment() -> Option<Vec<Part>> {
   if env::var("SSH_TTY").ok().map_or(0, |tty| tty.len()) > 0 {
