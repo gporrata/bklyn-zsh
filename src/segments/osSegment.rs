@@ -26,12 +26,14 @@ pub fn segment() -> Option<Vec<Part>> {
           None
         }
       })
-      .and_then(|output| {
-        if output == "Ubuntu" {
-          Some("\u{fe73a} ")
+      .and_then(|stdout| {
+        let tstdout = stdout.trim();
+        if tstdout == "Ubuntu" {
+          println!("Matched to ubuntu?");
+          Some("\u{e73a} ")
         }
-        else if output == "Redhat" {
-          Some("\u{f309} ")
+        else if tstdout == "Redhat" {
+          Some("\u{e7bb} ")
         }
         else {
           None
