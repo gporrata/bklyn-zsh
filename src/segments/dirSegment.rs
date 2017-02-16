@@ -5,9 +5,10 @@ use ::segments::*;
 use std::path::Path;
 use std::env;
 
-const bg0: u32 = 0x094d77;
+//const bg0: u32 = 0x094d77;
+const bg0: u32 = 0x0f3247;
 const fg0: u32 = 0x33a4ea;
-const fg1: u32 = 0xffffff;
+const fg1: u32 = 0xcccccc;
 
 type StaticDataMap = HashMap<&'static str, &'static str>; 
 

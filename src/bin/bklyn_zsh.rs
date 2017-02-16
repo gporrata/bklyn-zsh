@@ -3,7 +3,7 @@ extern crate bklyn_zsh;
 
 use std::env;
 use getopts::Options;
-use bklyn_zsh::zsh;
+use bklyn_zsh::joiners;
 
 fn help(opts: Options, program: &str) {
   let brief = format!("Usage: {} FILE [options]", program);
@@ -28,12 +28,17 @@ pub fn main() {
   if matches.opt_present("h") {
     help(opts, &program);
   }
-  // get prompt 
-  match matches.opt_str("p") {
-    Some(ref prompt) if prompt == "zsh-left" => zsh::left(matches.free),
-    Some(ref prompt) if prompt == "zsh-right" => zsh::right(matches.free),
-    Some(ref prompt) => panic!("Unknown prompt {}", prompt),
-    None => {}
+  else {
+    // get prompt 
+    matches.opt_str("p").and_then(move |prompt|
+      match prompt.as_ref() {
+        "zsh-left" => Some(joiners::zshLeft(matches.free)),
+        "zsh-right" => Some(joiners::zshRight(matches.free)),
+        "tmux-left" => Some(joiners::tmuxLeft(matches.free)),
+        "tmux-window" => Some(joiners::tmuxWindowStatus(matches.free)),
+        _ => None
+      }
+    );
   }
 }
 
