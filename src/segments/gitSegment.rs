@@ -32,7 +32,7 @@ use self::regex::*;
 
 const bg0: u32 = 0x33d1a;
 const fg0: u32 = 0x27ae60;
-const fg1: u32 = 0xffffff;
+const fg1: u32 = 0xcccccc;
 //const fg2: u32 = 0xf1c40f; // not used
 const fgUnstaged: u32 = 0xe74c3c;
 const fgStaged: u32 = 0xe67e22;

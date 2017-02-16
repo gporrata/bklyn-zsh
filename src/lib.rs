@@ -10,7 +10,7 @@ macro_rules! hashmap {
 }
 
 pub mod segments;
-pub mod zsh;
+pub mod joiners;
 
 #[cfg(test)]
 mod tests;
