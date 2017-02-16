@@ -1,8 +1,15 @@
 #!/usr/bin/env zsh
 
-# watch build <cmd>; continuously build, if fail less, else run <cmd>
-# watch release; continuously build, copy to ./bin
-# watch test; continuously build, run test
+# watch build <cmd>
+#   continuously build
+#   if fail less
+#   else run <cmd> timed
+# watch release <cmd>
+#   continuously build debug and release
+#   if fail copy to ./bin
+#   else run <cmd> timed
+# watch test
+#   continuously build then run test
 
 if [[ "$watch_in_progress" == "" ]]; then
   watch_in_progress=yes nodemon --exec ${0:A} --ext "rs toml" -- $@ 
@@ -19,13 +26,17 @@ else
         cargo build --release && 
         cp ./target/release/bklyn_zsh ./bin &&
         echo "Copied to bin"
+        shift
+        if [[ "$@" != "" ]]; then
+          time ./target/release/bklyn_zsh $@ ; echo
+        fi
         ;;
       test)
         cargo test
         ;;
       *)
         if [[ "$@" != "" ]]; then
-          time "$@" ; echo
+          time ./target/debug/bklyn_zsh $@ ; echo
         fi
         ;;
     esac

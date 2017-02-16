@@ -6,6 +6,7 @@ mod dirSegment;
 mod gitSegment;
 mod exitCodeSegment;
 mod pidSegment;
+pub mod windowStatusSegment;
 mod customSegment;
 
 use std::vec::Vec;
@@ -29,6 +30,7 @@ pub fn segment_of(name: &str) -> Option<Vec<Part>> {
     "git" => gitSegment::segment(),
     "exit" => exitCodeSegment::segment(),
     "pid" => pidSegment::segment(),
+    str if str.starts_with("window:") => windowStatusSegment::segment(name),
     _ => customSegment::segment(name) 
   }
 }

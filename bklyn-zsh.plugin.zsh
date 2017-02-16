@@ -52,7 +52,7 @@ bklyn_zsh_precmd_hook() {
 # install bklyn_zsh hook
 bklyn_zsh_install() {
   export OSTYPE
-  export host
+  export HOST 
   [[ -z $precmd_functions ]] && precmd_functions=()
   precmd_functions=($precmd_functions bklyn_zsh_precmd_hook)
 }

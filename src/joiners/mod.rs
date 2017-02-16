@@ -4,8 +4,12 @@
 mod zsh;
 mod tmux;
 
+extern crate regex;
+
 use std::vec::Vec;
 use segments::*;
+use self::regex::Regex;
+use std::env;
 
 trait ColorOperations {
   fn all_reset(&self) -> &'static str;
@@ -31,31 +35,58 @@ fn sep_codes() -> SepCodes {
   ]
 }
 
-// adds left separator
-fn left_sep<F1>(
+// adds separator on the right side of segments; for zsh left prompt for instance
+fn right_sep<F1>(
   result: &mut String, cop: &F1,
-  seps: SepCodes, hasLast: bool, lastBg: u32, currBg: u32) 
+  seps: SepCodes, lastBg: u32, currBg: u32) 
 where F1: ColorOperations {
-  if hasLast {
-    if currBg == lastBg {
-      //result.push_str(seps[1][1]);
+  if currBg == lastBg {
+    //result.push_str(seps[1][1]);
+  }
+  else {
+    if lastBg == 0 {
+      result.push_str(&cop.fg_reset());
     }
     else {
       result.push_str(&cop.fg(lastBg));
-      if currBg == 0 {
-        result.push_str(cop.bg_reset());
-      }
-      else {
-        result.push_str(&cop.bg(currBg));
-      }
-      result.push_str(seps[1][0]);
-      result.push_str(" ");
     }
+    if currBg == 0 {
+      result.push_str(cop.bg_reset());
+    }
+    else {
+      result.push_str(&cop.bg(currBg));
+    }
+    result.push_str(seps[1][0]);
   }
 }
 
-// adds right separator
-fn right_sep<F1>(
+// adds separator on the right side of segments; for zsh left prompt for instance
+fn right_sep2<F1>(
+  result: &mut String, cop: &F1,
+  seps: SepCodes, lastBg: u32, currBg: u32) 
+where F1: ColorOperations {
+  if currBg == lastBg {
+    //result.push_str(seps[1][1]);
+  }
+  else {
+    if lastBg == 0 {
+      result.push_str(&cop.fg_reset());
+    }
+    else {
+      result.push_str(&cop.fg(lastBg));
+    }
+    if currBg == 0 {
+      result.push_str(cop.bg_reset());
+    }
+    else {
+      result.push_str(&cop.bg(currBg));
+    }
+    result.push_str(seps[1][1]);
+  }
+}
+
+// adds separator to the left side of a segment (for zsh right prompt for instance)
+fn left_sep<F1>(
   result: &mut String, cop: &F1,
   seps: SepCodes, hasLast: bool, lastBg: u32, currBg: u32) 
 where F1: ColorOperations {
@@ -123,9 +154,12 @@ pub fn zshLeft(segments: Vec<String>) {
     .collect();
   let string = parts_fold(texts, &cop, true,
     |mut stringBuf, hasLast, lastBg, currBg| 
-      left_sep(&mut stringBuf, &cop, seps, hasLast, lastBg, currBg),
+      if hasLast {
+        right_sep(&mut stringBuf, &cop, seps, lastBg, currBg);
+        stringBuf.push_str(" ");
+      },
     |mut stringBuf, hasLast, lastBg| {
-      left_sep(&mut stringBuf, &cop, seps, true, lastBg, 0);
+      right_sep(&mut stringBuf, &cop, seps, lastBg, 0);
       stringBuf.push_str(cop.all_reset());
       stringBuf.push_str("\n\u{f489}  ");
     });
@@ -141,14 +175,14 @@ pub fn zshRight(segments: Vec<String>) {
     .collect();
   let string = parts_fold(texts, &cop, false,
     |mut stringBuf, hasLast, lastBg, currBg|
-      right_sep(&mut stringBuf, &cop, seps, hasLast, lastBg, currBg),
+      left_sep(&mut stringBuf, &cop, seps, hasLast, lastBg, currBg),
     |mut stringBuf, hasLast, lastBg| {
       stringBuf.push_str(cop.all_reset());
     });
   print!("{}", string.as_str());
 }
 
-// generate tmux left prompt
+// generate tmux status left
 pub fn tmuxLeft(segments: Vec<String>) {
   let seps = sep_codes();
   let cop = tmux::cop();
@@ -157,10 +191,68 @@ pub fn tmuxLeft(segments: Vec<String>) {
     .collect();
   let string = parts_fold(texts, &cop, true,
     |mut stringBuf, hasLast, lastBg, currBg| 
-      left_sep(&mut stringBuf, &cop, seps, hasLast, lastBg, currBg),
+      if hasLast {
+        right_sep(&mut stringBuf, &cop, seps, lastBg, currBg)
+      },
     |mut stringBuf, hasLast, lastBg| {
-      left_sep(&mut stringBuf, &cop, seps, true, lastBg, 0);
+      right_sep(&mut stringBuf, &cop, seps, lastBg, 0);
+      stringBuf.push_str(cop.all_reset());
+      stringBuf.push_str(" ");
+    });
+  println!("{}", string.as_str());
+}
+
+pub struct WindowStatus {
+  pub windowIndex: u32,
+  pub numWindows: u32,
+  pub isActive: bool
+}
+
+pub fn getTmuxWindowStatusEnv() -> WindowStatus {
+  let tmuxStatus = env::var("tmux_window_status").expect("Missing tmux_window_status!");
+  let rex = Regex::new(r"(\d+):(\d+):(1|0)").unwrap();
+  rex.captures(&tmuxStatus).map(|captures| {
+    let windowIndex = captures.get(1).unwrap().as_str().parse::<u32>().unwrap();
+    let numWindows = captures.get(2).unwrap().as_str().parse::<u32>().unwrap();
+    let isActive = captures.get(3).unwrap().as_str().parse::<u32>().unwrap();
+    WindowStatus { windowIndex: windowIndex, numWindows: numWindows, isActive: isActive != 0 }
+  })
+  .unwrap()
+}
+
+// generate tmux window status
+pub fn tmuxWindowStatus(segments: Vec<String>) {
+  let seps = sep_codes();
+  let cop = tmux::cop();
+  let windowStatus = getTmuxWindowStatusEnv();
+  let texts = segments.iter()
+    .flat_map(|segment| segment_of(segment))
+    .collect();
+  let string = parts_fold(texts, &cop, true,
+    |mut stringBuf, hasLast, lastBg, currBg|
+      if hasLast {
+        right_sep(&mut stringBuf, &cop, seps, lastBg, currBg)
+      }
+      else if windowStatus.windowIndex == 0 {
+        left_sep(&mut stringBuf, &cop, seps, false, lastBg, currBg)
+      }
+      else if windowStatus.isActive {
+        right_sep(&mut stringBuf, &cop, seps, 
+          windowStatusSegment::bg0_inactive, windowStatusSegment::bg0_active)
+      }
+      else {
+        right_sep2(&mut stringBuf, &cop, seps, 
+          windowStatusSegment::bg0_active, windowStatusSegment::bg0_inactive)
+      },
+    |mut stringBuf, hasLast, lastBg| {
+      if windowStatus.windowIndex < (windowStatus.numWindows - 1) {
+        right_sep(&mut stringBuf, &cop, seps, lastBg, windowStatusSegment::bg0_inactive);
+      }
+      else {
+        right_sep(&mut stringBuf, &cop, seps, lastBg, 0);
+      }
       stringBuf.push_str(cop.all_reset());
     });
   println!("{}", string.as_str());
 }
+

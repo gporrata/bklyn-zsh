@@ -4,12 +4,12 @@ use self::regex::Regex;
 use ::segments::*;
 
 // allows arbitrary text for a segment
-// fg set with ±fg{XXXXXX} where XXXXXX is hex but also 'default'
-// bg set with ±bg{XXXXXX} ''
 // bg must be the first thing set for rendering separators
+// fg set with =fg{XXXXXX} where XXXXXX is hex but also 'default'
+// bg set with =bg{XXXXXX} ''
 
 pub fn segment(text: &str) -> Option<Vec<Part>> {
-  let color = Regex::new(r"±(fg|bg)\{([0-9a-f]{6}|default)}").unwrap();
+  let color = Regex::new(r"=(fg|bg)\{([0-9a-fA-F]{6}|default)}").unwrap();
   let mut endOfLastMatch = 0;
   let mut parts = color.captures_iter(text)
     .flat_map(|capture| {
@@ -49,7 +49,7 @@ pub fn segment(text: &str) -> Option<Vec<Part>> {
         };
         Some(parts)
       },
-      _ => None
+      _ => None 
     }
   }
 }
