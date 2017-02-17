@@ -36,6 +36,7 @@ pub fn main() {
         "zsh-right" => Some(joiners::zshRight(matches.free)),
         "tmux-left" => Some(joiners::tmuxLeft(matches.free)),
         "tmux-window" => Some(joiners::tmuxWindowStatus(matches.free)),
+        "tmux-right" => Some(joiners::tmuxRight(matches.free)),
         _ => None
       }
     );

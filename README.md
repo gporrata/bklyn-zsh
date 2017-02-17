@@ -19,6 +19,11 @@ colors. ust a few features including:
 * show pid of zsh shell
 * pretty colors defined in hex
 
+Tmux Setup:
+
+In your tmux.conf file do:
+* source "$ZPLUG_HOME/repos/gporrata/bklyn_zsh/tmux-theme.conf"
+
 Todo:
 
 * show if in ssh

@@ -202,6 +202,22 @@ pub fn tmuxLeft(segments: Vec<String>) {
   println!("{}", string.as_str());
 }
 
+// generate tmux right prompt
+pub fn tmuxRight(segments: Vec<String>) {
+  let seps = sep_codes();
+  let cop = tmux::cop();
+  let texts = segments.iter()
+    .flat_map(|segment| segment_of(segment))
+    .collect();
+  let string = parts_fold(texts, &cop, false,
+    |mut stringBuf, hasLast, lastBg, currBg|
+      left_sep(&mut stringBuf, &cop, seps, hasLast, lastBg, currBg),
+    |mut stringBuf, hasLast, lastBg| {
+      stringBuf.push_str(cop.all_reset());
+    });
+  print!("{}", string.as_str());
+}
+
 pub struct WindowStatus {
   pub windowIndex: u32,
   pub numWindows: u32,
