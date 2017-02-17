@@ -10,7 +10,7 @@ My own zsh & tmux theme, inspired by powerlevel9k and powerline. Requires:
 * a nerd font
 
 The screenshot above uses iTerm2, a nerd font, and solarized
-colors. ust a few features including:
+colors. Just a few features including:
 
 * show nice os icons for osx, linux (ubuntu or redhat)
 * show nice icon for type of project language (js, scala, java, .c++, rust)
@@ -26,9 +26,7 @@ In your tmux.conf file do:
 
 Todo:
 
-* show if in ssh
 * show docker setup
 * show puppet setup
 * show version of project language (eg node ver, scala ver, java ver, gcc, rust ver, etc)
-* provide tmux theme from same server, coming soon
 * alternating powerline edges based on the day.
