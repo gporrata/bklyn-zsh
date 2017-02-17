@@ -6,9 +6,7 @@ use ::segments::*;
 use std::process::Command;
 use self::regex::*;
 
-// use for time
-//const bg0: u32 = 0x2C3E50;
-const bg0: u32 = 0xecf0f1;
+const bg0: u32 = 0xbdc3c7;
 const fg0: u32 = 0x27ae60;
 const fg1: u32 = 0x0f3247;
 
@@ -64,7 +62,8 @@ pub fn segment() -> Option<Vec<Part>> {
       Part::Fg(fg0),
       Part::StaticText(sep),
       Part::Fg(fg1),
-      Part::Text(load.la_15min)
+      Part::Text(load.la_15min),
+      Part::StaticText(" ")
     ]
   })
 }
