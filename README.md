@@ -2,7 +2,7 @@
 
 ![screenshot](https://raw.githubusercontent.com/gporrata/bklyn-zsh/master/screenshot.png)
 
-My own zsh theme, inspired by powerlevel9k and powerline. Requires:
+My own zsh & tmux theme, inspired by powerlevel9k and powerline. Requires:
 
 * zplug ( you could use other zsh plugin managers but I haven't )
 * rust + cargo
