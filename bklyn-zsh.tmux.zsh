@@ -24,16 +24,16 @@ left_sep=$'\ue0b4'
 left_sep_thin=$'\ue0b5'
 
 center_color='#1a237e'
-active_center_color='#90caf9'
+active_center_color='#e1f5fe'
 active_icon=$'\uf067'
 inactive_icon=$'\uf068'
 
-right_color='#222222'
+right_color='#e1f5fe'
 right_sep=$'\ue0b6'
 right_sep_thin=$'\ue0b7'
 load_icon=$'\ue234'
-load_color='#4db6ac'
-time_color='#ffeb3b'
+load_color='#004d40,bold'
+time_color='#b71c1c,bold'
 time_icon=$'\uf43a'
 
 center_debug() {
@@ -57,7 +57,7 @@ eval_center() {
 
 case "$1" in
   left)
-    echo " $(fg $bklyn_zsh_ostype_color_code)$bklyn_zsh_ostype "
+    echo " $(fg $active_center_color)$bklyn_zsh_ostype "
     ;;
   center)
     shift
