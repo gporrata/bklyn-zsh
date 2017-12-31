@@ -3,10 +3,14 @@ setopt NO_CHECK_JOBS
 
 bklyn_zsh_dir=${0:A:h}
 
-up() {
+bklyn_zsh_update() {
   for f in color_codes install ostype ssh git prompt; do
     source ${bklyn_zsh_dir}/src/$f.zsh
   done
 }
 
-#up
+bklyn_zsh_update
+
+up() {
+  bklyn_zsh_update
+}
