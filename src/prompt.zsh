@@ -1,11 +1,12 @@
 bklyn_zsh_eval_prompt() {
+  local last_status=$?
   local dir_color=$(bklyn_zsh_fg1m '#9e9e9e')
   dir_color=$(bklyn_zsh_encase $dir_color)
   local prompt_color=$(bklyn_zsh_fg256 255)
   prompt_color=$(bklyn_zsh_encase $prompt_color)
   local time_color=$(bklyn_zsh_fg1m '#ffee58')
   time_color=$(bklyn_zsh_encase $time_color)
-  local dharma_color=$(bklyn_zsh_fg1m '#2962ff')
+  local dharma_color=$(bklyn_zsh_fg1m '#2980B9')
   dharma_color=$(bklyn_zsh_encase $dharma_color)
 
   local bklyn_zsh_prompt=$'\uf489'
