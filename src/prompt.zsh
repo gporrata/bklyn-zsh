@@ -1,7 +1,7 @@
 bklyn_zsh_eval_prompt() {
   local last_status=$?
   if (( $last_status != 0 )); then
-    local last_status_color=$(bklyn_zsh_fg1m '#E74C3C')
+    local last_status_color=$(bklyn_zsh_fg1m '#ff5252')
     last_status_color=$(bklyn_zsh_encase $last_status_color)
     local last_status_icon=$'\uf00d'
     last_status=$last_status_color$last_status_icon' '$last_status$'\n'
@@ -27,9 +27,9 @@ bklyn_zsh_eval_prompt() {
     $last_status
     ${bklyn_zsh_ostype_color}${bklyn_zsh_ostype}' '
     "$(bklyn_zsh_ssh_status)"
-    ${dir_color}"%30<..<%~%<<"' '
-    "${git_status}"
-    $'\n'${prompt_color}${bklyn_zsh_prompt}' '
+    $dir_color"%30<..<%~%<<"' '
+    "$git_status"
+    $'\n'$prompt_color$bklyn_zsh_prompt' '
   )
 
   PROMPT=${(j::)prompt_array}
