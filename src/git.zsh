@@ -69,20 +69,20 @@ bklyn_zsh_git_status() {
     color=$(bklyn_zsh_encase $color)
     up_down_color=$(bklyn_zsh_fg1m $style[up_down_color])
     up_down_color=$(bklyn_zsh_encase $up_down_color)
-    local git_line=$color$style[branch_icon]$branch$up_down_color
+    local git_line="$color$style[branch_icon] $branch $up_down_color"
 
     if [[ $up != "" && $up != "0" ]]; then
-      git_line="$git_line $style[up_icon]$up"
+      git_line="$git_line$style[up_icon] $up "
     fi
     if [[ $down != "" && $down != "0" ]]; then
-      git_line="$git_line $style[down_icon]$down"
+      git_line="$git_line$style[down_icon] $down "
     fi
 
     local stash_count=`git stash list 2>/dev/null | wc -l`
     if [[ $stash_count != "0" ]]; then
-      git_line="$git_line $style[stash_icon]$stash_count"
+      git_line="$git_line$style[stash_icon] $stash_count"
     fi
     
-    echo -ne $git_line
+    echo -n $git_line
   fi
 }
