@@ -7,9 +7,10 @@ bklyn_zsh_git_status() {
     unstaged '#f44336'
     staged '#F1C40F'
     branch_icon $'\ue725'
-    up_down_color '#D35400'
+    up_down_color '#78909c'
     up_icon $'\uf062'
     down_icon $'\uf063'
+    stash_icon $'\uf01c'
   )
 
   local is_git=true
@@ -71,11 +72,17 @@ bklyn_zsh_git_status() {
     local git_line=$color$style[branch_icon]$branch$up_down_color
 
     if [[ $up != "" && $up != "0" ]]; then
-      git_line="$git_line $style[up_icon]${up}"
+      git_line="$git_line $style[up_icon]$up"
     fi
     if [[ $down != "" && $down != "0" ]]; then
-      git_line="$git_line $style[down_icon]${down}"
+      git_line="$git_line $style[down_icon]$down"
     fi
+
+    local stash_count=`git stash list 2>/dev/null | wc -l`
+    if [[ $stash_count != "0" ]]; then
+      git_line="$git_line $style[stash_icon]$stash_count"
+    fi
+    
     echo -ne $git_line
   fi
 }
