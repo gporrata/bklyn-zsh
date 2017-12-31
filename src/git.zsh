@@ -6,7 +6,7 @@ bklyn_zsh_git_status() {
     untracked '#f44336'
     unstaged '#f44336'
     staged '#F1C40F'
-    branch_icon $'\ue725'
+    branch_icon $'\ue725 '
     up_down_color '#D35400'
     up_icon $'\uf062'
     down_icon $'\uf063'
@@ -28,6 +28,12 @@ bklyn_zsh_git_status() {
           ;;
         '# branch.head'*)
           local branch=${line:s/# branch.head //}
+          branch=${branch##*/}
+          local orig_branch_len=${#branch}
+          branch=$branch[1,$(($1-2))]
+          if (( ${#branch} != $orig_branch_len )); then
+            branch="${branch}.."
+          fi
           ;;
         '# branch.ab'*)
           [[ $line =~ '# branch.ab \+(.+) -(.+)' ]] &&
@@ -62,9 +68,7 @@ bklyn_zsh_git_status() {
     color=$(bklyn_zsh_encase $color)
     up_down_color=$(bklyn_zsh_fg1m $style[up_down_color])
     up_down_color=$(bklyn_zsh_encase $up_down_color)
-    local git_line=$color$style[branch_icon]${branch##*/}$bklyn$up_down_color
-    up=23
-  down=42
+    local git_line=$color$style[branch_icon]$branch$up_down_color
 
     if [[ $up != "" && $up != "0" ]]; then
       git_line="$git_line $style[up_icon]${up}"

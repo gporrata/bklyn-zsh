@@ -1,5 +1,5 @@
 bklyn_zsh_precmd_hook() {
-  eval_prompt
+  bklyn_zsh_eval_prompt
 }
 
 bklyn_zsh_install() {
