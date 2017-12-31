@@ -10,6 +10,7 @@ eval_bklyn_zsh_ostype() {
   esac
 }
 
-bklyn_zsh_ostype_color=$(bklyn_zsh_fg1m '#2980B9')
+bklyn_zsh_ostype_color_code='#2980B9'
+bklyn_zsh_ostype_color=$(bklyn_zsh_fg1m $bklyn_zsh_ostype_color_code)
 bklyn_zsh_ostype_color=$(bklyn_zsh_encase $bklyn_zsh_ostype_color)
 bklyn_zsh_ostype=$(eval_bklyn_zsh_ostype)
