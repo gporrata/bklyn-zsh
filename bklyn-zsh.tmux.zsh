@@ -65,7 +65,7 @@ case "$1" in
     eval_center $@ 
     ;;
   right)
-    right_repl="$(fg $right_color)$right_sep$(bg $right_color)$(fg $load_color)$load_icon \4 \5 \6 $(fg $time_color)$time_icon \1"
+    right_repl="$(fg $right_color)$right_sep$(bg $right_color)$(fg $load_color)$load_icon \4 \5 \6 $(fg $time_color)$time_icon \1 "
     right_line=`uptime | sed -nE "s/([^ ]+)[ ]+(([^,]+)[ ]+)?[0-9:]+,[ ]+[^,]+,[ ]+load average: ([^, ]+), ([^, ]+), ([^, ]+)/$right_repl/ p"`
     echo $right_line
     ;;
