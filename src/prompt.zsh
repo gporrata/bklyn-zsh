@@ -33,6 +33,6 @@ bklyn_zsh_eval_prompt() {
   )
 
   PROMPT=${(j::)prompt_array}
-  RPROMPT="$dharma_color$kchenno $time_color%D{%H:%m} "
+  RPROMPT="$dharma_color$kchenno $time_color%D{%H:%M} "
 }
 
