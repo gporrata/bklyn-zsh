@@ -28,12 +28,12 @@ active_center_color='#e1f5fe'
 active_icon=$'\uf067'
 inactive_icon=$'\uf068'
 
-right_color='#e1f5fe'
+right_color='#111111'
 right_sep=$'\ue0b6'
 right_sep_thin=$'\ue0b7'
 load_icon=$'\ue234'
-load_color='#004d40,bold'
-time_color='#b71c1c,bold'
+load_color='#43a047,bold'
+time_color='#e65100,bold'
 time_icon=$'\uf43a'
 
 center_debug() {
@@ -65,7 +65,7 @@ case "$1" in
     eval_center $@ 
     ;;
   right)
-    right_repl="$(fg $right_color)$right_sep$(bg $right_color)$(fg $load_color)$load_icon \4 \5 \6 $(fg $time_color)$time_icon \1 "
+    right_repl="$(fg $right_color)$right_sep$(bg $right_color)$(fg $load_color)$load_icon \4 \5 \6 $right_sep_thin $(fg $time_color)$time_icon \1 "
     right_line=`uptime | sed -nE "s/([^ ]+)[ ]+(([^,]+)[ ]+)?[0-9:]+,[ ]+[^,]+,[ ]+load average: ([^, ]+), ([^, ]+), ([^, ]+)/$right_repl/ p"`
     echo $right_line
     ;;
