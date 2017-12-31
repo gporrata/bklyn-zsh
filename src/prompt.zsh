@@ -1,21 +1,22 @@
 bklyn_zsh_eval_prompt() {
-  dir_color=$(bklyn_zsh_fg1m '#7F8C8D')
+  local dir_color=$(bklyn_zsh_fg1m '#9e9e9e')
   dir_color=$(bklyn_zsh_encase $dir_color)
-  prompt_color=$(bklyn_zsh_fg256 255)
+  local prompt_color=$(bklyn_zsh_fg256 255)
   prompt_color=$(bklyn_zsh_encase $prompt_color)
-  time_color=$(bklyn_zsh_fg1m '#ffca28')
+  local time_color=$(bklyn_zsh_fg1m '#ffee58')
   time_color=$(bklyn_zsh_encase $time_color)
-  dharma_color=$(bklyn_zsh_fg1m '#2962ff')
+  local dharma_color=$(bklyn_zsh_fg1m '#2962ff')
   dharma_color=$(bklyn_zsh_encase $dharma_color)
 
-  bklyn_zsh_prompt=$'\uf489'
-  omph='ༀམཉཕདྷཧཱུཾ'
-  kchenno='ཀརྨ་པ་མཁྱེན་ནོ།'
+  local bklyn_zsh_prompt=$'\uf489'
+  local omph='ༀམཉཕདྷཧཱུཾ'
+  local kchenno='ཀརྨ་པ་མཁྱེན་ནོ།'
 
-  git_status_length=$(( `tput cols` - 30 - 12 ))
-  git_status=$(bklyn_zsh_git_status $git_status_length)
-  prompt_array=(
+  local git_status_length=$(( `tput cols` - 30 - 12 ))
+  local git_status=$(bklyn_zsh_git_status $git_status_length)
+  local prompt_array=(
     ${bklyn_zsh_ostype_color}${bklyn_zsh_ostype}
+    $(bklyn_zsh_ssh_status)
     ${dir_color}"%30<..<%~%<<"
     ${git_status}
     $'\n'${prompt_color}${bklyn_zsh_prompt}' '

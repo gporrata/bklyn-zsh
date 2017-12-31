@@ -6,7 +6,7 @@ bklyn_zsh_git_status() {
     untracked '#f44336'
     unstaged '#f44336'
     staged '#F1C40F'
-    branch_icon $'\ue725 '
+    branch_icon $'\ue725'
     up_down_color '#D35400'
     up_icon $'\uf062'
     down_icon $'\uf063'
