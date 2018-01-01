@@ -1,8 +1,0 @@
-[package]
-name = "bklyn_zsh"
-version = "0.1.0"
-authors = ["George Porrata <gporrata@gmail.com>"]
-
-[dependencies]
-getopts = "0.2"
-regex = "0.2"
