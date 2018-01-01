@@ -31,8 +31,8 @@ bklyn_zsh_eval_prompt() {
     "$git_status"
     $'\n'$prompt_color$bklyn_zsh_prompt' '
   )
-
   PROMPT=${(j::)prompt_array}
-  RPROMPT="$dharma_color$kchenno $time_color%D{%H:%M} "
+  #RPROMPT="$dharma_color$kchenno $time_color%D{%H:%M} "
+  RPROMPT="$time_color%D{%H:%M} "
 }
 

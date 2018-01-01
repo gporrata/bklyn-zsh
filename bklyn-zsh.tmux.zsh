@@ -23,8 +23,9 @@ tmux_color='#0f3247'
 left_sep=$'\ue0b4'
 left_sep_thin=$'\ue0b5'
 
-center_color='#1a237e'
-active_center_color='#e1f5fe'
+center_color='#43a047'
+active_center_color='#111111'
+inactive_center_color='#dddddd'
 active_icon=$'\uf055'
 inactive_icon=$'\uf056'
 
@@ -49,9 +50,9 @@ eval_center() {
   if [[ $3 == 1 ]]; then
     echo -n "$(fg $active_center_color)$right_sep$(fbg "$center_color,bold" $active_center_color)$active_icon $title$(fbg $active_center_color $tmux_color)$left_sep "
   elif [[ $1 == 0 ]]; then
-    echo -n "$(fg $active_center_color)$right_sep_thin $inactive_icon $title $left_sep_thin "
+    echo -n "$(fg $inactive_center_color)$right_sep_thin $inactive_icon $title $left_sep_thin "
   else
-    echo -n "$(fg $active_center_color)$inactive_icon $title $left_sep_thin "
+    echo -n "$(fg $inactive_center_color)$inactive_icon $title $left_sep_thin "
   fi
 }
 
@@ -66,7 +67,7 @@ case "$1" in
     ;;
   right)
     right_repl="$(fg $right_color)$right_sep$(bg $right_color)$(fg $load_color)$load_icon \4 \5 \6 $right_sep_thin $(fg $time_color)$time_icon \1 "
-    right_line=`uptime | sed -nE "s/([^ ]+)[ ]+(([^,]+)[ ]+)?[0-9:]+,[ ]+[^,]+,[ ]+load average: ([^, ]+), ([^, ]+), ([^, ]+)/$right_repl/ p"`
+    right_line=`uptime | sed -nE "s/([^ apm]+)[apm]+[ ]+(([^,]+)[ ]+)?[0-9:]+,[ ]+[^,]+,[ ]+load average: ([^, ]+), ([^, ]+), ([^, ]+)/$right_repl/ p"`
     echo $right_line
     ;;
   *)
