@@ -32,8 +32,16 @@ inactive_icon=$'\uf056'
 right_color='#111111'
 right_sep=$'\ue0b6'
 right_sep_thin=$'\ue0b7'
+
+disk_icon=$'\uf233'
+disk_color='#a1887f'
+
+cpu_icon=$'\ue266'
+cpu_color='#42a5f5'
+
 load_icon=$'\ue234'
 load_color='#43a047,bold'
+
 time_color='#e65100,bold'
 time_icon=$'\uf43a'
 
@@ -56,6 +64,27 @@ eval_center() {
   fi
 }
 
+linux_right() {
+}
+
+osx_right() {
+  spc=" +"
+  val="([.0-9]+)"
+  i=$spc$val
+  sub=$i$i$i$i$i$i$i$i$i
+  repl="$(fg $disk_color)$right_sep_thin $disk_icon \1 \2 \3 $(fg $cpu_color)$right_sep_thin $cpu_icon \4 \5 \6 $(fg $load_color)$right_sep_thin $load_icon \7 \8 \9 "
+  stats=$(iostat | tail -n1 | sed -nE "s/$sub$/$repl/ p")
+  time_info="$(fg $time_color)$right_sep_thin $time_icon $(date '+%H:%M')"
+  right_line="$stats $time_info" 
+  echo $right_line
+}
+
+uptime_right() {
+  right_repl="$(fg $right_color)$right_sep$(bg $right_color)$(fg $load_color)$load_icon \4 \5 \6 $right_sep_thin $(fg $time_color)$time_icon \1 "
+  right_line=`uptime | sed -nE "s/([^ apm]+)[apm]+[ ]+(([^,]+)[ ]+)?[0-9:]+,[ ]+[^,]+,[ ]+load average: ([^, ]+), ([^, ]+), ([^, ]+)/$right_repl/ p"`
+  echo $right_line
+}
+
 case "$1" in
   left)
     echo " $(fg '#ff6d00')$bklyn_zsh_ostype "
@@ -66,9 +95,14 @@ case "$1" in
     eval_center $@ 
     ;;
   right)
-    right_repl="$(fg $right_color)$right_sep$(bg $right_color)$(fg $load_color)$load_icon \4 \5 \6 $right_sep_thin $(fg $time_color)$time_icon \1 "
-    right_line=`uptime | sed -nE "s/([^ apm]+)[apm]+[ ]+(([^,]+)[ ]+)?[0-9:]+,[ ]+[^,]+,[ ]+load average: ([^, ]+), ([^, ]+), ([^, ]+)/$right_repl/ p"`
-    echo $right_line
+    case "$OSTYPE" in
+      darwin*)
+        osx_right
+        ;;
+      *)
+        uptime_right
+        ;;
+    esac
     ;;
   *)
     echo "Unknown specifier $1"
