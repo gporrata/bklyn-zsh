@@ -86,10 +86,10 @@ osx_right() {
   val="([.0-9]+)"
   i=$spc$val
   sub=$i$i$i$i$i$i$i$i$i
-  repl="$(fg $disk_color) $disk_icon \1 \2 \3 $(fg $cpu_color) $cpu_icon \4 \5 \6 $(fg $load_color) $load_icon \7 \8 \9 "
+  repl="$(fg $disk_color)$disk_icon \1 \2 \3 $(fg $cpu_color)$cpu_icon \4 \5 \6 $(fg $load_color)$load_icon \7 \8 \9"
   stats=$(iostat | tail -n1 | sed -nE "s/$sub$/$repl/ p")
-  time_info="$(fg $time_color) $time_icon $(date '+%H:%M')"
-  right_line="$eth $stats $time_info" 
+  time_info="$(fg $time_color)$time_icon $(date '+%H:%M')"
+  right_line="$eth $stats $time_info " 
   echo $right_line
 }
 
@@ -101,7 +101,7 @@ uptime_right() {
 
 case "$1" in
   left)
-    echo " $(fg '#ff6d00')$bklyn_zsh_ostype "
+    echo " $(fg '#ff6d00')$bklyn_zsh_ostype #S "
     ;;
   center)
     shift
