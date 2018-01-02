@@ -33,6 +33,10 @@ right_color='#111111'
 right_sep=$'\ue0b6'
 right_sep_thin=$'\ue0b7'
 
+eth_color='#ba68c8'
+up_icon=$'\uf0ee'
+down_icon=$'\uf0ed'
+
 disk_icon=$'\uf233'
 disk_color='#a1887f'
 
@@ -64,23 +68,33 @@ eval_center() {
   fi
 }
 
-linux_right() {
+osx_ifconfig() {
+  perl << '__perl' <<(ifconfig -v en0)
+while(<DATA>) {
+  $up = $1 if /uplink rate: ([^ ]+)/;
+  $down = $1 if /downlink rate: ([^ ]+)/;
+}
+print "$up $down";
+__DATA__
+__perl
 }
 
 osx_right() {
+  ud=($(osx_ifconfig))
+  eth="$(fg $eth_color)$up_icon $ud[1] $down_icon $ud[2]"
   spc=" +"
   val="([.0-9]+)"
   i=$spc$val
   sub=$i$i$i$i$i$i$i$i$i
-  repl="$(fg $disk_color)$right_sep_thin $disk_icon \1 \2 \3 $(fg $cpu_color)$right_sep_thin $cpu_icon \4 \5 \6 $(fg $load_color)$right_sep_thin $load_icon \7 \8 \9 "
+  repl="$(fg $disk_color) $disk_icon \1 \2 \3 $(fg $cpu_color) $cpu_icon \4 \5 \6 $(fg $load_color) $load_icon \7 \8 \9 "
   stats=$(iostat | tail -n1 | sed -nE "s/$sub$/$repl/ p")
-  time_info="$(fg $time_color)$right_sep_thin $time_icon $(date '+%H:%M')"
-  right_line="$stats $time_info" 
+  time_info="$(fg $time_color) $time_icon $(date '+%H:%M')"
+  right_line="$eth $stats $time_info" 
   echo $right_line
 }
 
 uptime_right() {
-  right_repl="$(fg $right_color)$right_sep$(bg $right_color)$(fg $load_color)$load_icon \4 \5 \6 $right_sep_thin $(fg $time_color)$time_icon \1 "
+  right_repl="$(fg $right_color)$right_sep$(bg $right_color)$(fg $load_color)$load_icon \4 \5 \6  $(fg $time_color)$time_icon \1 "
   right_line=`uptime | sed -nE "s/([^ apm]+)[apm]+[ ]+(([^,]+)[ ]+)?[0-9:]+,[ ]+[^,]+,[ ]+load average: ([^, ]+), ([^, ]+), ([^, ]+)/$right_repl/ p"`
   echo $right_line
 }
