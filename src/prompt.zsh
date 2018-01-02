@@ -13,7 +13,7 @@ bklyn_zsh_eval_prompt() {
 
   local num_jobs=''
   if (( $#jobtexts != 0)); then
-    local jobs_color=$(bklyn_zsh_fg1m '#4dd0e1')
+    local jobs_color=$(bklyn_zsh_fg1m '#ce93d8')
     jobs_color=$(bklyn_zsh_encase $jobs_color)
     if (( $#jobtexts == 1 )); then
       num_jobs="${jobs_color}1jb "
