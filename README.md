@@ -12,5 +12,7 @@ For Zsh:
 
 For Tmux:
 * os icon
-* avg number of jobs in run queue over 1, 5, 15 mins (from uptime)
+* ifconfig up/down[link] rate stats from ifconfig on osx
+* iostat stats on osx
+* avg number of jobs in run queue over 1, 5, 15 mins from uptime otherwise
 * time
