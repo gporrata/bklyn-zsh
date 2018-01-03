@@ -85,6 +85,7 @@ osx_right() {
   spc=" +"
   val="([.0-9]+)"
   i=$spc$val
+  sub=$i$i$i$i$i$i$i$i$i 
   repl="$(fg $disk_color)$disk_icon \1 \2 \3 $(fg $cpu_color)$cpu_icon \4 \5 \6 $(fg $load_color)$load_icon \7 \8 \9"
   stats=$(iostat | tail -n1 | sed -nE "s/$sub$/$repl/ p")
   time_info="$(fg $time_color)$time_icon $(date '+%H:%M')"
