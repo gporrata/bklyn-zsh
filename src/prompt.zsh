@@ -1,7 +1,6 @@
 bklyn_zsh_eval_prompt() {
+  local last_status=$1
   local right_sep_thin=$'\ue0b7'
-
-  local last_status=$?
   if (( $last_status != 0 )); then
     local last_status_color=$(bklyn_zsh_fg1m '#ff5252')
     last_status_color=$(bklyn_zsh_encase $last_status_color)

@@ -1,6 +1,7 @@
 bklyn_zsh_precmd_hook() {
+  local last_status=$?
   bklyn_zsh_runtime_end
-  bklyn_zsh_eval_prompt
+  bklyn_zsh_eval_prompt $last_status
 }
 
 bklyn_zsh_preexec_hook() {
