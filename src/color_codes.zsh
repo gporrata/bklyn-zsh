@@ -36,3 +36,5 @@ bklyn_zsh_bg1m() {
 bklyn_zsh_encase() {
   echo -n "%{$1%}"
 }
+
+bklyn_zsh_reset=$(bklyn_zsh_encase `echo -ne "\e[0m"`)
